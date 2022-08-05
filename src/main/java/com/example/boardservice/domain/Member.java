@@ -3,6 +3,7 @@ package com.example.boardservice.domain;
 
 import com.example.boardservice.domain.base.TimeEntity;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -35,4 +36,11 @@ public class Member extends TimeEntity {
     @Column(name = "PASSWORD", length = 100, nullable = false)
     private String password; // 비밀번호
 
+    @Builder
+    public Member(String name, String nickName, String email, String password) {
+        this.name = name;
+        this.nickName = nickName;
+        this.email = email;
+        this.password = password;
+    }
 }
