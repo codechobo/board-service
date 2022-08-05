@@ -1,6 +1,7 @@
 package com.example.boardservice.domain;
 
 
+import com.example.boardservice.domain.base.TimeEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,7 +16,7 @@ import javax.persistence.*;
         @UniqueConstraint(columnNames = "PASSWORD"),
         @UniqueConstraint(columnNames = "EMAIL")})
 @Entity
-public class Member {
+public class Member extends TimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
