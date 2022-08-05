@@ -11,11 +11,13 @@ import javax.persistence.*;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "POSTS")
 @Entity
 public class Post extends TimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "POSTS_ID")
     private Long id;
 
     @Column(name = "AUTHOR", length = 30)
@@ -24,8 +26,8 @@ public class Post extends TimeEntity {
     @Column(name = "TITLE", length = 100)
     private String title; // 제목
 
-    @Column(name = "CONTENT")
     @Lob
+    @Column(name = "CONTENT")
     private String content; // 글 내용
 
     @Builder
