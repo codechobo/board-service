@@ -39,7 +39,6 @@ class MemberControllerTest {
     @Test
     @DisplayName("Member 정보 저장한다.")
     void createMember() throws Exception {
-        // given
         MemberSaveRequestDto memberSaveRequestDto =
                 MemberInstanceProvider.createMemberSaveRequestDto();
 
@@ -48,7 +47,6 @@ class MemberControllerTest {
                         .member(memberSaveRequestDto.toEntity())
                         .build());
 
-        // when && then
         mockMvc.perform(post("/api/v1/members")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(memberSaveRequestDto)))

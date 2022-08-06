@@ -45,14 +45,4 @@ class MemberServiceTest {
         assertThat(result.getNickname()).isEqualTo(member.getNickname());
         verify(memberRepository).save(any(Member.class));
     }
-
-
-    private MemberSaveRequestDto createMemberSaveRequestDto() {
-        return MemberSaveRequestDto.builder()
-                .name("이기영")
-                .nickname("까까머리")
-                .email("기영@naver.com")
-                .password("test1234")
-                .build();
-    }
 }

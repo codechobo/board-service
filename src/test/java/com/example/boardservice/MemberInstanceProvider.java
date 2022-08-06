@@ -1,5 +1,6 @@
 package com.example.boardservice;
 
+import com.example.boardservice.domain.Member;
 import com.example.boardservice.web.dto.MemberSaveRequestDto;
 
 public class MemberInstanceProvider {
