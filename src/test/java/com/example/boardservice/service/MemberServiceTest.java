@@ -5,6 +5,7 @@ import com.example.boardservice.domain.Member;
 import com.example.boardservice.domain.repository.MemberRepository;
 import com.example.boardservice.web.dto.MemberSaveRequestDto;
 import com.example.boardservice.web.dto.MemberSaveResponseDto;
+import com.example.boardservice.web.dto.MemberUpdateRequestDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -70,7 +71,9 @@ class MemberServiceTest {
     void findMembers() {
         // given
         Member member = DtoInstanceProvider.createMemberSaveRequestDto().toEntity();
-        List<Member> members = new ArrayList<>(){{add(member);}};
+        List<Member> members = new ArrayList<>() {{
+            add(member);
+        }};
 
         given(memberRepository.findAll())
                 .willReturn(members);
@@ -86,5 +89,28 @@ class MemberServiceTest {
         );
 
         verify(memberRepository).findAll();
+    }
+
+    @Test
+    @DisplayName("Member 업데이트")
+    void updateAfterFindMember() {
+        MemberUpdateRequestDto memberUpdateRequestDto = MemberUpdateRequestDto.builder()
+                .memberId(1L)
+                .nickname("이기영")
+                .email("기영@naver.com")
+                .password("test1234")
+                .build();
+
+        Member member = Member.builder()
+                .name("이기철")
+                .nickname("기영이 형")
+                .email("기철@naver.com")
+                .password("test12345")
+                .build();
+        given(memberRepository.findById(anyLong()))
+                .willReturn(Optional.of(member));
+
+        memberService.updateAfterFindMember(memberUpdateRequestDto);
+        verify(memberRepository).findById(anyLong());
     }
 }

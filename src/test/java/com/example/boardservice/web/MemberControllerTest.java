@@ -4,6 +4,7 @@ import com.example.DtoInstanceProvider;
 import com.example.boardservice.service.MemberService;
 import com.example.boardservice.web.dto.MemberSaveRequestDto;
 import com.example.boardservice.web.dto.MemberSaveResponseDto;
+import com.example.boardservice.web.dto.MemberUpdateRequestDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,10 +22,11 @@ import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willDoNothing;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.springframework.http.converter.json.Jackson2ObjectMapperBuilder.json;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -100,7 +102,7 @@ class MemberControllerTest {
         MemberSaveResponseDto memberSaveResponseDto = MemberSaveResponseDto.builder()
                 .member(memberSaveRequestDto.toEntity())
                 .build();
-        List<MemberSaveResponseDto> list = new ArrayList<>(){{
+        List<MemberSaveResponseDto> list = new ArrayList<>() {{
             add(memberSaveResponseDto);
         }};
 
@@ -114,7 +116,31 @@ class MemberControllerTest {
                         objectMapper.writeValueAsString(list)));
 
         verify(memberService).findMembers();
+    }
 
+    @Test
+    @DisplayName("Member 업데이트 하다")
+    void updateMember() throws Exception {
+        // given
+        MemberUpdateRequestDto memberUpdateRequestDto = MemberUpdateRequestDto.builder()
+                .memberId(1L)
+                .nickname("이기철")
+                .email("기철@naver.com")
+                .password("test12345")
+                .build();
 
+        willDoNothing().given(memberService)
+                .updateAfterFindMember(any(MemberUpdateRequestDto.class));
+
+        // when && then
+        mockMvc.perform(put("/api/v1/members")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper
+                                .writeValueAsString(memberUpdateRequestDto)))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        verify(memberService)
+                .updateAfterFindMember(any(MemberUpdateRequestDto.class));
     }
 }
