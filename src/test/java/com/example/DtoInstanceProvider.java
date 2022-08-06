@@ -1,9 +1,8 @@
-package com.example.boardservice;
+package com.example;
 
-import com.example.boardservice.domain.Member;
 import com.example.boardservice.web.dto.MemberSaveRequestDto;
 
-public class MemberInstanceProvider {
+public class DtoInstanceProvider {
 
     public static MemberSaveRequestDto createMemberSaveRequestDto() {
         return MemberSaveRequestDto.builder()

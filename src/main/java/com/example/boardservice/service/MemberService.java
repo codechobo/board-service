@@ -37,4 +37,12 @@ public class MemberService {
             throw new IllegalArgumentException("중복 정보");
         }
     }
+
+    public MemberSaveResponseDto findMemberById(Long memberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("존재 하지 않은 아이디입니다."));
+        return MemberSaveResponseDto.builder()
+                .member(member)
+                .build();
+    }
 }

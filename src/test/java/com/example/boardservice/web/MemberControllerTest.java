@@ -1,7 +1,6 @@
 package com.example.boardservice.web;
 
-import com.example.boardservice.MemberInstanceProvider;
-import com.example.boardservice.domain.Member;
+import com.example.DtoInstanceProvider;
 import com.example.boardservice.service.MemberService;
 import com.example.boardservice.web.dto.MemberSaveRequestDto;
 import com.example.boardservice.web.dto.MemberSaveResponseDto;
@@ -15,14 +14,16 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
+import static org.springframework.http.converter.json.Jackson2ObjectMapperBuilder.json;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest
 class MemberControllerTest {
@@ -39,14 +40,16 @@ class MemberControllerTest {
     @Test
     @DisplayName("Member 정보 저장한다.")
     void createMember() throws Exception {
+        // given
         MemberSaveRequestDto memberSaveRequestDto =
-                MemberInstanceProvider.createMemberSaveRequestDto();
+                DtoInstanceProvider.createMemberSaveRequestDto();
 
         given(memberService.saveMember(any(MemberSaveRequestDto.class)))
                 .willReturn(MemberSaveResponseDto.builder()
                         .member(memberSaveRequestDto.toEntity())
                         .build());
 
+        // when && then
         mockMvc.perform(post("/api/v1/members")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(memberSaveRequestDto)))
@@ -60,6 +63,28 @@ class MemberControllerTest {
                                         .build())));
 
         verify(memberService).saveMember(any(MemberSaveRequestDto.class));
+    }
+
+    @Test
+    @DisplayName("Member 조회하다 -> Id 값으로")
+    void readMemberById() throws Exception {
+        // given
+        MemberSaveRequestDto memberSaveRequestDto = DtoInstanceProvider.createMemberSaveRequestDto();
+        MemberSaveResponseDto memberSaveResponseDto = MemberSaveResponseDto.builder()
+                .member(memberSaveRequestDto.toEntity())
+                .build();
+        given(memberService.findMemberById(anyLong()))
+                .willReturn(memberSaveResponseDto);
+
+        // when && then
+        mockMvc.perform(get("/api/v1/members/" + 1L))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().json(objectMapper
+                        .writeValueAsString(memberSaveResponseDto)))
+                .andExpect(jsonPath("nickname", is(memberSaveRequestDto.getNickname())));
+
+        verify(memberService).findMemberById(anyLong());
     }
 
 }
