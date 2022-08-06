@@ -12,9 +12,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
@@ -32,13 +35,16 @@ class MemberServiceTest {
     @Test
     @DisplayName("Member 정보 저장한다.")
     void saveMember() {
+        // given
         MemberSaveRequestDto memberSaveRequestDto = DtoInstanceProvider.createMemberSaveRequestDto();
         given(memberRepository.save(any(Member.class)))
                 .willReturn(memberSaveRequestDto.toEntity());
 
+        // when
         MemberSaveResponseDto result = memberService
                 .saveMember(memberSaveRequestDto);
 
+        // then
         assertThat(result.getNickname()).isEqualTo(memberSaveRequestDto.getNickname());
         verify(memberRepository).save(any(Member.class));
     }
@@ -46,13 +52,39 @@ class MemberServiceTest {
     @Test
     @DisplayName("Member 정보 조회하다 -> id 값")
     void findMemberById() {
+        // given
         MemberSaveRequestDto memberSaveRequestDto = DtoInstanceProvider.createMemberSaveRequestDto();
         given(memberRepository.findById(anyLong()))
                 .willReturn(Optional.of(memberSaveRequestDto.toEntity()));
 
+        // when
         MemberSaveResponseDto result = memberService.findMemberById(1L);
 
+        // then
         assertThat(result.getNickname()).isEqualTo(memberSaveRequestDto.getNickname());
         verify(memberRepository).findById(anyLong());
+    }
+
+    @Test
+    @DisplayName("Member 모든 정보 조회")
+    void findMembers() {
+        // given
+        Member member = DtoInstanceProvider.createMemberSaveRequestDto().toEntity();
+        List<Member> members = new ArrayList<>(){{add(member);}};
+
+        given(memberRepository.findAll())
+                .willReturn(members);
+
+        // when
+        List<MemberSaveResponseDto> result = memberService.findMembers();
+
+        // then
+        assertAll(
+                () -> assertThat(result.iterator().next().getNickname()).isEqualTo(member.getNickname()),
+                () -> assertThat(result.size()).isEqualTo(1),
+                () -> assertThat(result.get(0).getNickname()).isEqualTo(member.getNickname())
+        );
+
+        verify(memberRepository).findAll();
     }
 }
