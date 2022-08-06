@@ -13,6 +13,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
@@ -87,4 +90,31 @@ class MemberControllerTest {
         verify(memberService).findMemberById(anyLong());
     }
 
+    @Test
+    @DisplayName("Member 모든 정보 조회")
+    void readMembers() throws Exception {
+        // given
+        MemberSaveRequestDto memberSaveRequestDto =
+                DtoInstanceProvider.createMemberSaveRequestDto();
+
+        MemberSaveResponseDto memberSaveResponseDto = MemberSaveResponseDto.builder()
+                .member(memberSaveRequestDto.toEntity())
+                .build();
+        List<MemberSaveResponseDto> list = new ArrayList<>(){{
+            add(memberSaveResponseDto);
+        }};
+
+        given(memberService.findMembers()).willReturn(list);
+
+        // when && then
+        mockMvc.perform(get("/api/v1/members"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().json(
+                        objectMapper.writeValueAsString(list)));
+
+        verify(memberService).findMembers();
+
+
+    }
 }
