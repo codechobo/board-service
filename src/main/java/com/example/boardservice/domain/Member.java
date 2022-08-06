@@ -28,7 +28,7 @@ public class Member extends TimeEntity {
     private String name; // 이름
 
     @Column(name = "NICKNAME", length = 30)
-    private String nickName; // 닉네임
+    private String nickname; // 닉네임
 
     @Column(name = "EMAIL", length = 100, nullable = false)
     private String email; // 이메일
@@ -37,9 +37,9 @@ public class Member extends TimeEntity {
     private String password; // 비밀번호
 
     @Builder
-    public Member(String name, String nickName, String email, String password) {
+    public Member(String name, String nickname, String email, String password) {
         this.name = name;
-        this.nickName = nickName;
+        this.nickname = nickname;
         this.email = email;
         this.password = password;
     }
