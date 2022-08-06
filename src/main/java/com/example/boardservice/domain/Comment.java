@@ -48,12 +48,15 @@ public class Comment extends TimeEntity {
         this.content = content;
     }
 
+    public void addPost(Post post) {
+        this.post = post;
+    }
+
     public void addComment(Post post, Comment comment) {
         if (post == null || comment == null) {
             throw new EntityNotFoundException("엔티티를 찾을 수 없습니다.");
         }
-
-        this.post = post;
+        addPost(post);
         this.parent = comment;
         this.child.add(comment);
     }
