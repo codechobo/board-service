@@ -1,7 +1,5 @@
 package com.example.boardservice.web;
 
-import com.example.boardservice.domain.Member;
-import com.example.boardservice.domain.repository.MemberRepository;
 import com.example.boardservice.service.MemberService;
 import com.example.boardservice.web.dto.MemberSaveRequestDto;
 import com.example.boardservice.web.dto.MemberSaveResponseDto;
