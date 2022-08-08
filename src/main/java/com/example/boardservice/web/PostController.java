@@ -6,10 +6,9 @@ import com.example.boardservice.web.dto.PostSaveResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,4 +23,17 @@ public class PostController {
         PostSaveResponseDto postSaveResponseDto = postService.savePost(postSaveRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(postSaveResponseDto);
     }
+
+    @GetMapping("/posts/{id}")
+    public ResponseEntity<PostSaveResponseDto> readPostById(
+            @PathVariable("id") Long postId) {
+        PostSaveResponseDto postSaveResponseDto = postService.findByPostId(postId);
+        return ResponseEntity.status(HttpStatus.OK).body(postSaveResponseDto);
+    }
+
+    public ResponseEntity<List<PostSaveResponseDto>> readPosts() {
+        List<PostSaveResponseDto> posts = postService.findPosts();
+        return ResponseEntity.status(HttpStatus.OK).body(posts);
+    }
+
 }
