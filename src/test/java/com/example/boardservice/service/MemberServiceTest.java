@@ -21,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.*;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
@@ -112,5 +112,24 @@ class MemberServiceTest {
 
         memberService.updateAfterFindMember(memberUpdateRequestDto);
         verify(memberRepository).findById(anyLong());
+    }
+
+    @Test
+    @DisplayName("Member 삭제한다.")
+    void removeMember() {
+        Member member = Member.builder()
+                .name("이기철")
+                .nickname("기영이 형")
+                .email("기철@naver.com")
+                .password("test12345")
+                .build();
+        given(memberRepository.findById(anyLong())).willReturn(Optional.of(member));
+        willDoNothing().given(memberRepository).delete(any(Member.class));
+
+        memberService.removeMember(anyLong());
+
+        verify(memberRepository).findById(anyLong());
+        verify(memberRepository).delete(any(Member.class));
+
     }
 }

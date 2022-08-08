@@ -140,4 +140,17 @@ class MemberControllerTest {
         verify(memberService)
                 .updateAfterFindMember(any(MemberUpdateRequestDto.class));
     }
+
+    @Test
+    @DisplayName("Member 삭제 한다.")
+    void deleteMember() throws Exception {
+        willDoNothing().given(memberService).removeMember(anyLong());
+
+        mockMvc.perform(delete("/api/v1/members/" + 1L))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        verify(memberService).removeMember(anyLong());;
+    }
+
 }

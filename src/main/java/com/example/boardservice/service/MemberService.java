@@ -76,4 +76,10 @@ public class MemberService {
             throw new DuplicateRequestException(ErrorCode.REQUEST_DATA_DUPLICATED.getMessage());
         }
     }
+
+    @Transactional
+    public void removeMember(Long memberId) {
+        Member entity = getEntity(memberId);
+        memberRepository.delete(entity);
+    }
 }
