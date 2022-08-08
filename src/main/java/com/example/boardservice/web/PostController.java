@@ -31,6 +31,7 @@ public class PostController {
         return ResponseEntity.status(HttpStatus.OK).body(postSaveResponseDto);
     }
 
+    @GetMapping("/posts")
     public ResponseEntity<List<PostSaveResponseDto>> readPosts() {
         List<PostSaveResponseDto> posts = postService.findPosts();
         return ResponseEntity.status(HttpStatus.OK).body(posts);
