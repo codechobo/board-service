@@ -2,6 +2,7 @@ package com.example.boardservice.service;
 
 import com.example.boardservice.domain.Member;
 import com.example.boardservice.domain.repository.MemberRepository;
+import com.example.boardservice.domain.repository.PostRepository;
 import com.example.boardservice.error.ErrorCode;
 import com.example.boardservice.web.dto.MemberSaveRequestDto;
 import com.example.boardservice.web.dto.MemberSaveResponseDto;
@@ -20,6 +21,7 @@ import java.util.stream.Collectors;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final PostRepository postRepository;
 
     public MemberSaveResponseDto saveMember(MemberSaveRequestDto requestDto) {
         duplicatedCheck(requestDto.getNickname(), requestDto.getEmail(), requestDto.getPassword());
@@ -81,5 +83,6 @@ public class MemberService {
     public void removeMember(Long memberId) {
         Member entity = getEntity(memberId);
         memberRepository.delete(entity);
+        postRepository.deleteByAuthor(entity.getNickname());
     }
 }
