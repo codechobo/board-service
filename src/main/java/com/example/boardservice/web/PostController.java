@@ -3,6 +3,7 @@ package com.example.boardservice.web;
 import com.example.boardservice.service.PostService;
 import com.example.boardservice.web.dto.PostSaveRequestDto;
 import com.example.boardservice.web.dto.PostSaveResponseDto;
+import com.example.boardservice.web.dto.PostUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,6 +36,20 @@ public class PostController {
     public ResponseEntity<List<PostSaveResponseDto>> readPosts() {
         List<PostSaveResponseDto> posts = postService.findPosts();
         return ResponseEntity.status(HttpStatus.OK).body(posts);
+    }
+
+    @PutMapping("/posts/{id}")
+    public ResponseEntity<Void> updatePost(
+            @PathVariable("id") Long postId,
+            @RequestBody PostUpdateRequestDto postUpdateRequestDto) {
+        postService.updateAfterFindPost(postId, postUpdateRequestDto);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @DeleteMapping("/posts/{id}")
+    public ResponseEntity<Void> deletePost(@PathVariable("id") Long postId) {
+        postService.removePost(postId);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
 }

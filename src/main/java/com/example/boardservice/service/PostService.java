@@ -7,6 +7,7 @@ import com.example.boardservice.domain.repository.PostRepository;
 import com.example.boardservice.error.ErrorCode;
 import com.example.boardservice.web.dto.PostSaveRequestDto;
 import com.example.boardservice.web.dto.PostSaveResponseDto;
+import com.example.boardservice.web.dto.PostUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -58,5 +59,20 @@ public class PostService {
                         .post(post)
                         .build())
                 .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void updateAfterFindPost(Long postId, PostUpdateRequestDto postUpdateRequestDto) {
+        Post entity = getEntity(postId);
+
+        entity.updateTitle(postUpdateRequestDto.getTitle());
+        entity.updateContent(postUpdateRequestDto.getContent());
+    }
+
+    @Transactional
+    public void removePost(Long postId) {
+        Post entity = getEntity(postId);
+        
+        postRepository.delete(entity);
     }
 }
