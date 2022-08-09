@@ -13,6 +13,6 @@ public class PageController {
 
     @GetMapping("/members/save")
     public String memberSave() {
-        return "member-save";
+        return "members-save";
     }
 }
