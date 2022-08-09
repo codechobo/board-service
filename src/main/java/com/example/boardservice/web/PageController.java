@@ -12,7 +12,12 @@ public class PageController {
     }
 
     @GetMapping("/members/save")
-    public String memberSave() {
+    public String membersSave() {
         return "members-save";
+    }
+
+    @GetMapping("/posts/save")
+    public String postsSave() {
+        return "posts-save";
     }
 }
