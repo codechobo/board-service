@@ -1,9 +1,7 @@
 package com.example.boardservice.web;
 
 import com.example.boardservice.service.MemberService;
-import com.example.boardservice.web.dto.MemberSaveRequestDto;
-import com.example.boardservice.web.dto.MemberSaveResponseDto;
-import com.example.boardservice.web.dto.MemberUpdateRequestDto;
+import com.example.boardservice.web.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -51,6 +49,15 @@ public class MemberController {
     public ResponseEntity<Void> deleteMember(@PathVariable("id") Long memberId) {
         memberService.removeMember(memberId);
         return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @GetMapping("/members/login")
+    public ResponseEntity<MemberAuthResponseDto> checkedLoginInfo(
+            @RequestBody MemberLoginForm memberLoginForm) {
+        MemberAuthResponseDto memberAuthResponseDto = memberService
+                .getAuthInfoAfterVerifyingLoginInfo(memberLoginForm);
+
+        return ResponseEntity.status(HttpStatus.OK).body(memberAuthResponseDto);
     }
 
 }

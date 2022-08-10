@@ -9,6 +9,10 @@ var main = {
             _this.postSave();
         });
 
+        $('#btn-login').on('click', function () {
+            _this.login();
+        });
+
     },
     memberSave: function () {
         var data = {
@@ -51,8 +55,27 @@ var main = {
         }).fail(function (error) {
             alert(JSON.stringify(error));
         });
-    }
+    },
 
+    login: function () {
+        var data = {
+            nickname: $('#nickname').val(),
+            password: $('#password').val()
+        };
+
+        $.ajax({
+            type: 'GET',
+            url: '/api/v1/members/login',
+            dataType: 'json',
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify(data)
+        }).done(function () {
+            alert('로그인 성공!');
+            window.location.href = '/';
+        }).fail(function (error) {
+            alert(JSON.stringify(error));
+        });
+    }
 
 }
 main.init()

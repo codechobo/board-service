@@ -4,9 +4,7 @@ import com.example.boardservice.domain.Member;
 import com.example.boardservice.domain.repository.MemberRepository;
 import com.example.boardservice.domain.repository.PostRepository;
 import com.example.boardservice.error.ErrorCode;
-import com.example.boardservice.web.dto.MemberSaveRequestDto;
-import com.example.boardservice.web.dto.MemberSaveResponseDto;
-import com.example.boardservice.web.dto.MemberUpdateRequestDto;
+import com.example.boardservice.web.dto.*;
 import com.sun.jdi.request.DuplicateRequestException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -84,5 +82,23 @@ public class MemberService {
         Member entity = getEntity(memberId);
         memberRepository.delete(entity);
         postRepository.deleteByAuthor(entity.getNickname());
+    }
+
+    public MemberAuthResponseDto getAuthInfoAfterVerifyingLoginInfo(MemberLoginForm memberLoginForm) {
+        if (!memberRepository.existsByNickname(memberLoginForm.getNickname())) {
+            throw new EntityNotFoundException(ErrorCode.NOT_FOUND_ENTITY.getMessage());
+        }
+
+        if (!memberRepository.existsByPassword(memberLoginForm.getPassword())) {
+            throw new EntityNotFoundException(ErrorCode.NOT_FOUND_ENTITY.getMessage());
+        }
+
+        Member member = memberRepository.findByNickname(memberLoginForm.getNickname())
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.NOT_FOUND_ENTITY.getMessage()));
+
+        return MemberAuthResponseDto.builder()
+                .id(member.getId())
+                .nickName(member.getNickname())
+                .build();
     }
 }

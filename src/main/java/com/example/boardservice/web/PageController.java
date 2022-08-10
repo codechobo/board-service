@@ -7,17 +7,19 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class PageController {
 
     @GetMapping("/")
-    public String indexPage() {
+    public String indexPageForm() {
         return "index";
     }
 
     @GetMapping("/members/save")
-    public String membersSave() {
+    public String membersSaveForm() {
         return "members-save";
     }
 
     @GetMapping("/posts/save")
-    public String postsSave() {
+    public String postsSaveForm() {
         return "posts-save";
     }
+
+
 }
