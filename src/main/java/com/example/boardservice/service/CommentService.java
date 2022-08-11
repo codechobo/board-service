@@ -23,12 +23,8 @@ public class CommentService {
 
     @Transactional
     public CommentSaveResponseDto saveComment(Long postId, CommentSaveRequestDto commentSaveRequestDto) {
-        String authorNickname = commentSaveRequestDto.getAuthor();
-        Member member = memberRepository.findByNickname(authorNickname)
-                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.NOT_FOUND_ENTITY.getMessage()));
-
-        Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.NOT_FOUND_ENTITY.getMessage()));
+        Member member = getMemberEntity(commentSaveRequestDto.getAuthor());
+        Post post = getPostEntity(postId);
 
         Comment comment = Comment.builder()
                 .author(member.getNickname())
@@ -46,19 +42,11 @@ public class CommentService {
     }
 
     @Transactional
-    public CommentOfCommentResponseDto saveCommentOfComment(
-            Long postId,
-            Long commentId,
+    public CommentOfCommentResponseDto saveCommentOfComment(Long postId, Long commentId,
             CommentOfCommentRequestDto commentOfCommentRequestDto) {
-
-        Member member = memberRepository.findByNickname(commentOfCommentRequestDto.getAuthor())
-                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.NOT_FOUND_ENTITY.getMessage()));
-
-        Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.NOT_FOUND_ENTITY.getMessage()));
-        ;
-        Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.NOT_FOUND_ENTITY.getMessage()));
+        Member member = getMemberEntity(commentOfCommentRequestDto.getAuthor());
+        Post post = getPostEntity(postId);
+        Comment comment = getCommentEntity(commentId);
 
         Comment commentOfComment = Comment.builder()
                 .author(member.getNickname())
@@ -75,8 +63,7 @@ public class CommentService {
     }
 
     public CommentSaveResponseDto findCommentById(Long commentId) {
-        Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.NOT_FOUND_ENTITY.getMessage()));
+        Comment comment = getCommentEntity(commentId);
 
         return CommentSaveResponseDto.builder()
                 .author(comment.getAuthor())
@@ -88,9 +75,22 @@ public class CommentService {
     @Transactional
     public void updateAfterFindComment(Long commentId,
                                        CommentUpdateRequestDto commentUpdateRequestDto) {
-        Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.NOT_FOUND_ENTITY.getMessage()));
-
+        Comment comment = getCommentEntity(commentId);
         comment.updateContent(commentUpdateRequestDto.getContent());
+    }
+
+    private Member getMemberEntity(String authorNickname) {
+        return memberRepository.findByNickname(authorNickname)
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.NOT_FOUND_ENTITY.getMessage()));
+    }
+
+    private Post getPostEntity(Long postId) {
+        return postRepository.findById(postId)
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.NOT_FOUND_ENTITY.getMessage()));
+    }
+
+    private Comment getCommentEntity(Long commentId) {
+        return commentRepository.findById(commentId)
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.NOT_FOUND_ENTITY.getMessage()));
     }
 }

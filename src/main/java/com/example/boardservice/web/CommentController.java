@@ -34,14 +34,12 @@ public class CommentController {
         return ResponseEntity.status(HttpStatus.CREATED).body(commentOfCommentResponseDto);
     }
 
-    @GetMapping("/posts/{posts-id}/comments/{comments-id}")
+    @GetMapping("/posts/comments/{comments-id}")
     public ResponseEntity<CommentSaveResponseDto> readCommentById(
-            @PathVariable("posts-id") Long postId,
             @PathVariable("comments-id") Long commentId) {
         CommentSaveResponseDto commentSaveResponseDto = commentService.findCommentById(commentId);
         return ResponseEntity.status(HttpStatus.OK).body(commentSaveResponseDto);
     }
-
 
     @PutMapping("/posts/comments/{comments-id}")
     public ResponseEntity<Void> updateComment(
