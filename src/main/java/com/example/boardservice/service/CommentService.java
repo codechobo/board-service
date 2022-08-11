@@ -79,6 +79,12 @@ public class CommentService {
         comment.updateContent(commentUpdateRequestDto.getContent());
     }
 
+    @Transactional
+    public void removeComment(Long commentId) {
+        Comment entity = getCommentEntity(commentId);
+        commentRepository.delete(entity);
+    }
+
     private Member getMemberEntity(String authorNickname) {
         return memberRepository.findByNickname(authorNickname)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.NOT_FOUND_ENTITY.getMessage()));

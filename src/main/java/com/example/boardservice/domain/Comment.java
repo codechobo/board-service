@@ -35,7 +35,7 @@ public class Comment extends TimeEntity {
     @JoinColumn(name = "POSTS_ID")
     private Post post;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "PARENT_ID")
     @JsonBackReference
     private Comment parent;

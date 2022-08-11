@@ -48,4 +48,11 @@ public class CommentController {
         commentService.updateAfterFindComment(commentId, commentUpdateRequestDto);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
+
+    @DeleteMapping("/posts/comments")
+    public ResponseEntity<Void> deleteComment(
+            @RequestParam("comments-id") Long commentId) {
+        commentService.removeComment(commentId);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
 }
