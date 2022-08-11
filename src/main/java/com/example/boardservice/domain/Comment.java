@@ -59,4 +59,8 @@ public class Comment extends TimeEntity {
         this.parent = comment;
         this.child.add(comment);
     }
+
+    public void updateContent(String content) {
+        this.content = content;
+    }
 }

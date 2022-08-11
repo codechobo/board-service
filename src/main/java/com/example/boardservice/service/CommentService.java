@@ -6,10 +6,7 @@ import com.example.boardservice.domain.Post;
 import com.example.boardservice.domain.repository.MemberRepository;
 import com.example.boardservice.domain.repository.PostRepository;
 import com.example.boardservice.error.ErrorCode;
-import com.example.boardservice.web.dto.CommentOfCommentRequestDto;
-import com.example.boardservice.web.dto.CommentOfCommentResponseDto;
-import com.example.boardservice.web.dto.CommentSaveRequestDto;
-import com.example.boardservice.web.dto.CommentSaveResponseDto;
+import com.example.boardservice.web.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -86,5 +83,14 @@ public class CommentService {
                 .title(comment.getPost().getTitle())
                 .content(comment.getContent())
                 .build();
+    }
+
+    @Transactional
+    public void updateAfterFindComment(Long commentId,
+                                       CommentUpdateRequestDto commentUpdateRequestDto) {
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.NOT_FOUND_ENTITY.getMessage()));
+
+        comment.updateContent(commentUpdateRequestDto.getContent());
     }
 }
