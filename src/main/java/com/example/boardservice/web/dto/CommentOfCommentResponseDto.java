@@ -4,19 +4,22 @@ import com.example.boardservice.domain.Comment;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Getter
 public class CommentOfCommentResponseDto {
 
-    private final String title;
     private final String author;
     private final String content;
-    private Comment comment;
+    private final List<CommentOfCommentResponseDto> comments;
 
     @Builder
-    public CommentOfCommentResponseDto(String title, String author, String content, Comment comment) {
-        this.title = title;
-        this.author = author;
-        this.content = content;
-        this.comment = comment;
+    public CommentOfCommentResponseDto(Comment comment) {
+        this.author = comment.getAuthor();
+        this.content = comment.getContent();
+        this.comments = comment.getChild().stream()
+                .map(CommentOfCommentResponseDto::new)
+                .collect(Collectors.toList());;
     }
 }

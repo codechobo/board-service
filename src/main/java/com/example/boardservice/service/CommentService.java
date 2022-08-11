@@ -8,12 +8,14 @@ import com.example.boardservice.domain.repository.PostRepository;
 import com.example.boardservice.error.ErrorCode;
 import com.example.boardservice.web.dto.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class CommentService {
 
@@ -43,7 +45,7 @@ public class CommentService {
 
     @Transactional
     public CommentOfCommentResponseDto saveCommentOfComment(Long postId, Long commentId,
-            CommentOfCommentRequestDto commentOfCommentRequestDto) {
+                                                            CommentOfCommentRequestDto commentOfCommentRequestDto) {
         Member member = getMemberEntity(commentOfCommentRequestDto.getAuthor());
         Post post = getPostEntity(postId);
         Comment comment = getCommentEntity(commentId);
@@ -52,12 +54,10 @@ public class CommentService {
                 .author(member.getNickname())
                 .content(commentOfCommentRequestDto.getContent())
                 .build();
+        commentOfComment.addPost(post);
         comment.addComment(post, commentOfComment);
 
         return CommentOfCommentResponseDto.builder()
-                .title(post.getTitle())
-                .author(member.getNickname())
-                .content(post.getContent())
                 .comment(comment)
                 .build();
     }
@@ -81,7 +81,8 @@ public class CommentService {
 
     @Transactional
     public void removeComment(Long commentId) {
-        commentRepository.delete(getCommentEntity(commentId));
+        Comment entity = getCommentEntity(commentId);
+        commentRepository.delete(entity);
     }
 
     private Member getMemberEntity(String authorNickname) {

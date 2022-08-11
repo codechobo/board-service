@@ -4,10 +4,7 @@ package com.example.boardservice.domain;
 import com.example.boardservice.domain.base.TimeEntity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -57,8 +54,12 @@ public class Comment extends TimeEntity {
 
     public void addComment(Post post, Comment comment) {
         addPost(post);
-        this.parent = comment;
         this.child.add(comment);
+        comment.addParent(this);
+    }
+
+    public void addParent(Comment comment) {
+        this.parent = comment;
     }
 
     public void updateContent(String content) {
@@ -66,6 +67,6 @@ public class Comment extends TimeEntity {
     }
 
     public void deleteComment() {
-        this.child.remove(this);
+        getParent().getChild().remove(this);
     }
 }
