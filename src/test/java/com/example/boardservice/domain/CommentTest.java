@@ -2,8 +2,6 @@ package com.example.boardservice.domain;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class CommentTest {
 
     @Test
@@ -42,13 +40,13 @@ class CommentTest {
                 .author(member1.getNickname())
                 .content("기영이 바보@@")
                 .build();
-        comment.addComment(post, comment1);
+        comment.addComment(comment1);
 
         Comment comment2 = Comment.builder()
                 .author(member1.getNickname())
                 .content("기영이 바보@@@@@")
                 .build();
-        comment.addComment(post, comment2);
+        comment.addComment(comment2);
 
         System.out.println(comment);
 

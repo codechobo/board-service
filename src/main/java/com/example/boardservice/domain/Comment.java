@@ -6,10 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.crossstore.ChangeSetPersister;
 
 import javax.persistence.*;
-import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,15 +29,15 @@ public class Comment extends TimeEntity {
     @Column(name = "CONTENT")
     private String content;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, optional = false)
     @JoinColumn(name = "POSTS_ID")
     private Post post;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "PARENT_ID")
     private Comment parent;
 
-    @OneToMany(mappedBy = "parent")
+    @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY)
     private List<Comment> child = new ArrayList<>();
 
     @Builder
@@ -52,13 +50,8 @@ public class Comment extends TimeEntity {
         this.post = post;
     }
 
-    public void addComment(Post post, Comment comment) {
-        if (post == null || comment == null) {
-            throw new EntityNotFoundException("엔티티를 찾을 수 없습니다.");
-        }
-        addPost(post);
+    public void addComment(Comment comment) {
         this.parent = comment;
         this.child.add(comment);
     }
-
 }
