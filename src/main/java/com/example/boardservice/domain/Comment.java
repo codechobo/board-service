@@ -2,6 +2,8 @@ package com.example.boardservice.domain;
 
 
 import com.example.boardservice.domain.base.TimeEntity;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -29,15 +31,17 @@ public class Comment extends TimeEntity {
     @Column(name = "CONTENT")
     private String content;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "POSTS_ID")
     private Post post;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "PARENT_ID")
+    @JsonBackReference
     private Comment parent;
 
     @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<Comment> child = new ArrayList<>();
 
     @Builder
@@ -50,7 +54,8 @@ public class Comment extends TimeEntity {
         this.post = post;
     }
 
-    public void addComment(Comment comment) {
+    public void addComment(Post post, Comment comment) {
+        addPost(post);
         this.parent = comment;
         this.child.add(comment);
     }

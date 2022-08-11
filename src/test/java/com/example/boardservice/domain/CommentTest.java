@@ -40,13 +40,13 @@ class CommentTest {
                 .author(member1.getNickname())
                 .content("기영이 바보@@")
                 .build();
-        comment.addComment(comment1);
+        comment.addComment(post, comment1);
 
         Comment comment2 = Comment.builder()
                 .author(member1.getNickname())
                 .content("기영이 바보@@@@@")
                 .build();
-        comment.addComment(comment2);
+        comment.addComment(post, comment2);
 
         System.out.println(comment);
 

@@ -67,7 +67,7 @@ public class CommentService {
                 .author(member.getNickname())
                 .content(commentOfCommentRequestDto.getContent())
                 .build();
-        comment.addComment(commentOfComment);
+        comment.addComment(post, commentOfComment);
 
         return CommentOfCommentResponseDto.builder()
                 .title(post.getTitle())
@@ -80,6 +80,7 @@ public class CommentService {
     public CommentSaveResponseDto findCommentById(Long commentId) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.NOT_FOUND_ENTITY.getMessage()));
+
         return CommentSaveResponseDto.builder()
                 .author(comment.getAuthor())
                 .title(comment.getPost().getTitle())
