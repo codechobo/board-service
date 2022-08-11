@@ -40,7 +40,8 @@ public class Comment extends TimeEntity {
     @JsonBackReference
     private Comment parent;
 
-    @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY,
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
     @JsonManagedReference
     private List<Comment> child = new ArrayList<>();
 
@@ -62,5 +63,9 @@ public class Comment extends TimeEntity {
 
     public void updateContent(String content) {
         this.content = content;
+    }
+
+    public void deleteComment() {
+        this.child.remove(this);
     }
 }

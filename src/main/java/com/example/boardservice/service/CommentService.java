@@ -81,8 +81,7 @@ public class CommentService {
 
     @Transactional
     public void removeComment(Long commentId) {
-        Comment entity = getCommentEntity(commentId);
-        commentRepository.delete(entity);
+        commentRepository.delete(getCommentEntity(commentId));
     }
 
     private Member getMemberEntity(String authorNickname) {
