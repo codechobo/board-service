@@ -1,4 +1,4 @@
-package com.example.boardservice.web;
+package com.example.boardservice.web.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

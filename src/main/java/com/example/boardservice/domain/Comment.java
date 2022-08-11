@@ -29,7 +29,7 @@ public class Comment extends TimeEntity {
     @Column(name = "CONTENT")
     private String content;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     @JoinColumn(name = "POSTS_ID")
     private Post post;
 

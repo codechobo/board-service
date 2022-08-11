@@ -6,7 +6,7 @@ import com.example.boardservice.domain.Post;
 import com.example.boardservice.domain.repository.MemberRepository;
 import com.example.boardservice.domain.repository.PostRepository;
 import com.example.boardservice.error.ErrorCode;
-import com.example.boardservice.web.CommentOfCommentRequestDto;
+import com.example.boardservice.web.dto.CommentOfCommentRequestDto;
 import com.example.boardservice.web.dto.CommentOfCommentResponseDto;
 import com.example.boardservice.web.dto.CommentSaveRequestDto;
 import com.example.boardservice.web.dto.CommentSaveResponseDto;
@@ -54,14 +54,15 @@ public class CommentService {
             Long commentId,
             CommentOfCommentRequestDto commentOfCommentRequestDto) {
 
-        String authorNickname = commentOfCommentRequestDto.getAuthor();
-        Member member = memberRepository.findByNickname(authorNickname)
+        Member member = memberRepository.findByNickname(commentOfCommentRequestDto.getAuthor())
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.NOT_FOUND_ENTITY.getMessage()));
 
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.NOT_FOUND_ENTITY.getMessage()));
+        ;
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.NOT_FOUND_ENTITY.getMessage()));
 
-        Post post = comment.getPost();
         Comment commentOfComment = Comment.builder()
                 .author(member.getNickname())
                 .content(commentOfCommentRequestDto.getContent())
@@ -72,6 +73,17 @@ public class CommentService {
                 .title(post.getTitle())
                 .author(member.getNickname())
                 .content(post.getContent())
+                .comment(comment)
+                .build();
+    }
+
+    public CommentSaveResponseDto findCommentById(Long commentId) {
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.NOT_FOUND_ENTITY.getMessage()));
+        return CommentSaveResponseDto.builder()
+                .author(comment.getAuthor())
+                .title(comment.getPost().getTitle())
+                .content(comment.getContent())
                 .build();
     }
 }
