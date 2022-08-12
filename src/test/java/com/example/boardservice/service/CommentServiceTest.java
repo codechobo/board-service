@@ -5,10 +5,7 @@ import com.example.boardservice.domain.Member;
 import com.example.boardservice.domain.Post;
 import com.example.boardservice.domain.repository.MemberRepository;
 import com.example.boardservice.domain.repository.PostRepository;
-import com.example.boardservice.web.dto.comment_dto.CommentOfCommentRequestDto;
-import com.example.boardservice.web.dto.comment_dto.CommentOfCommentResponseDto;
-import com.example.boardservice.web.dto.comment_dto.CommentSaveRequestDto;
-import com.example.boardservice.web.dto.comment_dto.CommentSaveResponseDto;
+import com.example.boardservice.web.dto.comment_dto.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -114,6 +111,56 @@ class CommentServiceTest {
         verify(memberRepository).findByNickname(anyString());
         verify(postRepository).findById(anyLong());
         verify(commentRepository).findById(anyLong());
+    }
+
+    @Test
+    @DisplayName("댓글 조회하다. -> pk 값으로 조회")
+    void findCommentById() {
+        // given
+        Long commentId = 1L;
+
+        Comment comment = Comment.builder().author("까까머리").content("처음댓글").build();
+        given(commentRepository.findById(anyLong())).willReturn(Optional.of(comment));
+
+        // when
+        CommentSaveResponseDto result = commentService.findCommentById(commentId);
+
+        // then
+        assertThat(result.getAuthor()).isEqualTo(comment.getAuthor());
+        assertThat(result.getContent()).isEqualTo(comment.getContent());
+
+        verify(commentRepository).findById(anyLong());
+    }
+
+    @Test
+    @DisplayName("댓글 업데이트하다")
+    void updateAfterFindComment() {
+        // given
+        Long commentId = 1L;
+
+        Member member = createMember();
+        Comment updateBeforeComment = createComment(member, "처음 댓글");
+
+        given(commentRepository.findById(anyLong())).willReturn(Optional.of(updateBeforeComment));
+
+        CommentUpdateRequestDto commentUpdateRequestDto = CommentUpdateRequestDto.builder()
+                .content("테스트 글 수정")
+                .build();
+
+        // when
+        commentService.updateAfterFindComment(commentId, commentUpdateRequestDto);
+
+        // then
+        assertThat(updateBeforeComment.getContent()).isEqualTo(commentUpdateRequestDto.getContent());
+
+        verify(commentRepository).findById(anyLong());
+    }
+
+    private Comment createComment(Member member, String content) {
+        return Comment.builder()
+                .author(member.getNickname())
+                .content(content)
+                .build();
     }
 
     private Post createPost() {
