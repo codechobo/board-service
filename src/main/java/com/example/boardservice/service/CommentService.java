@@ -85,6 +85,15 @@ public class CommentService {
         commentRepository.delete(entity);
     }
 
+    public List<CommentSaveResponseDto> findComments() {
+        return commentRepository.findAll().stream()
+                .map(comment -> CommentSaveResponseDto.builder()
+                        .author(comment.getAuthor())
+                        .content(comment.getContent())
+                        .build())
+                .collect(Collectors.toList());
+    }
+
     private Member getMemberEntity(String authorNickname) {
         return memberRepository.findByNickname(authorNickname)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.NOT_FOUND_ENTITY.getMessage()));
@@ -100,12 +109,4 @@ public class CommentService {
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.NOT_FOUND_ENTITY.getMessage()));
     }
 
-    public List<CommentSaveResponseDto> findComments() {
-        return commentRepository.findAll().stream()
-                .map(comment -> CommentSaveResponseDto.builder()
-                        .author(comment.getAuthor())
-                        .content(comment.getContent())
-                        .build())
-                .collect(Collectors.toList());
-    }
 }

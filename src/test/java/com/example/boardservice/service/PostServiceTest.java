@@ -23,7 +23,7 @@ import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-class PostServiceTest {
+public class PostServiceTest {
 
     @Mock
     MemberRepository memberRepository;
@@ -116,7 +116,7 @@ class PostServiceTest {
         verify(postRepository).delete(any(Post.class));
     }
 
-    private Post createPost() {
+    protected Post createPost() {
         Post post = Post.builder()
                 .title("검정고무신 재밌지")
                 .content("기영이 때문에 본다!")
