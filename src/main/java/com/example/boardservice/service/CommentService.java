@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -37,7 +39,6 @@ public class CommentService {
         commentRepository.save(comment);
 
         return CommentSaveResponseDto.builder()
-                .title(post.getTitle())
                 .author(comment.getAuthor())
                 .content(comment.getContent())
                 .build();
@@ -67,7 +68,6 @@ public class CommentService {
 
         return CommentSaveResponseDto.builder()
                 .author(comment.getAuthor())
-                .title(comment.getPost().getTitle())
                 .content(comment.getContent())
                 .build();
     }
@@ -98,5 +98,14 @@ public class CommentService {
     private Comment getCommentEntity(Long commentId) {
         return commentRepository.findById(commentId)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.NOT_FOUND_ENTITY.getMessage()));
+    }
+
+    public List<CommentSaveResponseDto> findComments() {
+        return commentRepository.findAll().stream()
+                .map(comment -> CommentSaveResponseDto.builder()
+                        .author(comment.getAuthor())
+                        .content(comment.getContent())
+                        .build())
+                .collect(Collectors.toList());
     }
 }

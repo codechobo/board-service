@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -39,6 +40,12 @@ public class CommentController {
             @PathVariable("comments-id") Long commentId) {
         CommentSaveResponseDto commentSaveResponseDto = commentService.findCommentById(commentId);
         return ResponseEntity.status(HttpStatus.OK).body(commentSaveResponseDto);
+    }
+
+    @GetMapping("/posts/comments")
+    public ResponseEntity<List<CommentSaveResponseDto>> readComments() {
+        List<CommentSaveResponseDto> commentSaveResponseDtos = commentService.findComments();
+        return ResponseEntity.status(HttpStatus.OK).body(commentSaveResponseDtos);
     }
 
     @PutMapping("/posts/comments/{comments-id}")

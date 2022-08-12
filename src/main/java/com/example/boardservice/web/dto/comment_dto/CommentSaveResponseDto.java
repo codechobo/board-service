@@ -11,6 +11,5 @@ import lombok.Getter;
 public class CommentSaveResponseDto {
 
     private final String author;
-    private final String title;
     private final String content;
 }
