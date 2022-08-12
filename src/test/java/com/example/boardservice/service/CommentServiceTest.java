@@ -5,6 +5,8 @@ import com.example.boardservice.domain.Member;
 import com.example.boardservice.domain.Post;
 import com.example.boardservice.domain.repository.MemberRepository;
 import com.example.boardservice.domain.repository.PostRepository;
+import com.example.boardservice.web.dto.comment_dto.CommentOfCommentRequestDto;
+import com.example.boardservice.web.dto.comment_dto.CommentOfCommentResponseDto;
 import com.example.boardservice.web.dto.comment_dto.CommentSaveRequestDto;
 import com.example.boardservice.web.dto.comment_dto.CommentSaveResponseDto;
 import org.junit.jupiter.api.DisplayName;
@@ -17,6 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
@@ -72,6 +75,45 @@ class CommentServiceTest {
         verify(memberRepository).findByNickname(anyString());
         verify(postRepository).findById(anyLong());
         verify(commentRepository).save(any(Comment.class));
+    }
+
+    @Test
+    @DisplayName("대댓글 저장한다")
+    void saveCommentOfComment() {
+        // given
+        Long postId = 1L;
+        Long commentId = 1L;
+
+        Member member = createMember();
+        Post post = createPost();
+        Comment comment = Comment.builder()
+                .author(member.getNickname())
+                .content("처음 댓글")
+                .build();
+
+        given(memberRepository.findByNickname(anyString())).willReturn(Optional.of(member));
+        given(postRepository.findById(anyLong())).willReturn(Optional.of(post));
+        given(commentRepository.findById(commentId)).willReturn(Optional.of(comment));
+
+        CommentOfCommentRequestDto commentOfCommentRequestDto = CommentOfCommentRequestDto.builder()
+                .author("까까머리")
+                .content("대댓글1")
+                .build();
+
+        // when
+        CommentOfCommentResponseDto result =
+                commentService.saveCommentOfComment(postId, commentId, commentOfCommentRequestDto);
+
+        // then
+        assertAll(
+                () -> assertThat(result.getContent()).isEqualTo(comment.getContent()),
+                () -> assertThat(result.getComments().get(0).getContent())
+                        .isEqualTo(commentOfCommentRequestDto.getContent())
+        );
+
+        verify(memberRepository).findByNickname(anyString());
+        verify(postRepository).findById(anyLong());
+        verify(commentRepository).findById(anyLong());
     }
 
     private Post createPost() {
