@@ -34,15 +34,23 @@ public class PostService {
         return PostSaveResponseDto.builder().post(post).build();
     }
 
-    private Member checkExistMember(PostSaveRequestDto postSaveRequestDto) {
-        return memberRepository.findByNickname(postSaveRequestDto.getAuthor())
-                .orElseThrow(() -> new EntityNotFoundException(
-                        ErrorCode.NOT_FOUND_ENTITY.getMessage()));
-    }
-
     public PostSaveResponseDto findByPostId(Long postId) {
         Post entity = getEntity(postId);
         return PostSaveResponseDto.builder().post(entity).build();
+    }
+
+    @Transactional
+    public void updateAfterFindPost(Long postId, PostUpdateRequestDto postUpdateRequestDto) {
+        Post entity = getEntity(postId);
+
+        entity.updateTitle(postUpdateRequestDto.getTitle());
+        entity.updateContent(postUpdateRequestDto.getContent());
+    }
+
+    @Transactional
+    public void removePost(Long postId) {
+        Post entity = getEntity(postId);
+        postRepository.delete(entity);
     }
 
     private Post getEntity(Long postId) {
@@ -59,17 +67,8 @@ public class PostService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional
-    public void updateAfterFindPost(Long postId, PostUpdateRequestDto postUpdateRequestDto) {
-        Post entity = getEntity(postId);
-
-        entity.updateTitle(postUpdateRequestDto.getTitle());
-        entity.updateContent(postUpdateRequestDto.getContent());
-    }
-
-    @Transactional
-    public void removePost(Long postId) {
-        Post entity = getEntity(postId);
-        postRepository.delete(entity);
+    private Member checkExistMember(PostSaveRequestDto postSaveRequestDto) {
+        return memberRepository.findByNickname(postSaveRequestDto.getAuthor())
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.NOT_FOUND_ENTITY.getMessage()));
     }
 }

@@ -2,6 +2,7 @@ package com.example.boardservice.web.dto.post_dto;
 
 import com.example.boardservice.domain.Post;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -10,6 +11,7 @@ import javax.validation.constraints.Size;
 
 
 @Getter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class PostSaveRequestDto {
