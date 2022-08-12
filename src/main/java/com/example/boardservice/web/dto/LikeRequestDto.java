@@ -12,7 +12,7 @@ import javax.validation.constraints.NotNull;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class LikeSaveRequestDto {
+public class LikeRequestDto {
 
     @NotNull
     @JsonProperty("members_id")

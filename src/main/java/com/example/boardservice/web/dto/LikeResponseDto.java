@@ -5,13 +5,13 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class LikeSaveResponseDto {
+public class LikeResponseDto {
 
     private final Long memberId;
     private final Long postId;
 
     @Builder
-    public LikeSaveResponseDto(Like like) {
+    public LikeResponseDto(Like like) {
         this.memberId = like.getMembersId();
         this.postId = like.getPostsId();
     }
