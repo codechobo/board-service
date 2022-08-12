@@ -14,6 +14,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -175,6 +177,33 @@ class CommentServiceTest {
 
         // then
         verify(commentRepository).delete(comment);
+    }
+
+    @Test
+    @DisplayName("모든 댓글 조회")
+    void findComments() {
+        // given
+        Member member = createMember();
+        Comment comment = createComment(member, "ㅋㅋㅋㅋㅋㅋ");
+        List<Comment> comments = new ArrayList<>() {{
+            add(comment);
+            add(comment);
+            add(comment);
+        }};
+
+        given(commentRepository.findAll()).willReturn(comments);
+
+        // when
+        List<CommentSaveResponseDto> result = commentService.findComments();
+
+        // then
+        assertAll(
+                () -> assertThat(result.size()).isEqualTo(3),
+                () -> assertThat(result.isEmpty()).isFalse(),
+                () -> assertThat(result.stream().allMatch(
+                        commentSaveResponseDto -> commentSaveResponseDto
+                                .getContent().equals(comment.getContent()))).isTrue()
+        );
     }
 
     private Comment createComment(Member member, String content) {
