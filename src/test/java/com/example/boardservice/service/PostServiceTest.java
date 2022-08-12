@@ -16,8 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
@@ -37,18 +36,8 @@ class PostServiceTest {
     @DisplayName("게시글 저장한다")
     void savePost() {
         // given
-        Member member = Member.builder()
-                .name("이기영")
-                .nickname("까까머리")
-                .password("test1234")
-                .email("test@naver.com")
-                .build();
-
-        Post post = Post.builder()
-                .title("검정고무신 재밌지")
-                .content("기영이 때문에 본다!")
-                .build();
-        post.addAuthor(member.getNickname());
+        Member member = createMember();
+        Post post = createPost();
 
         PostSaveRequestDto postSaveRequestDto = PostSaveRequestDto.builder()
                 .author(post.getAuthor())
@@ -69,6 +58,42 @@ class PostServiceTest {
 
         verify(memberRepository).findByNickname(anyString());
         verify(postRepository).save(any(Post.class));
+    }
+
+    @Test
+    @DisplayName("게시판 조회하다 -> pk로 조회")
+    void findByPostId() {
+        // given
+        Post post = createPost();
+        given(postRepository.findById(anyLong())).willReturn(Optional.of(post));
+
+        // when
+        PostSaveResponseDto postSaveResponseDto = postService.findByPostId(1L);
+
+        // then
+        assertThat(postSaveResponseDto.getAuthor()).isEqualTo(post.getAuthor());
+        assertThat(postSaveResponseDto.getTitle()).isEqualTo(post.getTitle());
+        assertThat(postSaveResponseDto.getContent()).isEqualTo(post.getContent());
+
+        verify(postRepository).findById(anyLong());
+    }
+
+    private Post createPost() {
+        Post post = Post.builder()
+                .title("검정고무신 재밌지")
+                .content("기영이 때문에 본다!")
+                .build();
+        post.addAuthor(createMember().getNickname());
+        return post;
+    }
+
+    private Member createMember() {
+        return Member.builder()
+                .name("이기영")
+                .nickname("까까머리")
+                .password("test1234")
+                .email("test@naver.com")
+                .build();
     }
 
 }

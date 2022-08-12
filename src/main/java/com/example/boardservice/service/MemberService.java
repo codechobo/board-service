@@ -81,7 +81,6 @@ public class MemberService {
     public void removeMember(Long memberId) {
         Member entity = getEntity(memberId);
         memberRepository.delete(entity);
-        postRepository.deleteByAuthor(entity.getNickname());
     }
 
     public MemberAuthResponseDto getAuthInfoAfterVerifyingLoginInfo(MemberLoginForm memberLoginForm) {
