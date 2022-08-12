@@ -19,6 +19,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
@@ -97,6 +98,22 @@ class PostServiceTest {
 
         // then
         verify(postRepository).findById(anyLong());
+    }
+
+    @Test
+    @DisplayName("게시글 삭제한다.")
+    void removePost() {
+        // given
+        Post post = createPost();
+        given(postRepository.findById(anyLong())).willReturn(Optional.of(post));
+        willDoNothing().given(postRepository).delete(any(Post.class));
+
+        // when
+        postService.removePost(1L);
+
+        // then
+        verify(postRepository).findById(anyLong());
+        verify(postRepository).delete(any(Post.class));
     }
 
     private Post createPost() {
