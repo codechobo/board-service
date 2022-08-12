@@ -6,6 +6,7 @@ import com.example.boardservice.domain.repository.MemberRepository;
 import com.example.boardservice.domain.repository.PostRepository;
 import com.example.boardservice.web.dto.post_dto.PostSaveRequestDto;
 import com.example.boardservice.web.dto.post_dto.PostSaveResponseDto;
+import com.example.boardservice.web.dto.post_dto.PostUpdateRequestDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -75,6 +76,26 @@ class PostServiceTest {
         assertThat(postSaveResponseDto.getTitle()).isEqualTo(post.getTitle());
         assertThat(postSaveResponseDto.getContent()).isEqualTo(post.getContent());
 
+        verify(postRepository).findById(anyLong());
+    }
+
+    @Test
+    @DisplayName("게시판 업데이트")
+    void updateAfterFindPost() {
+        // given
+        Post post = createPost();
+        given(postRepository.findById(anyLong())).willReturn(Optional.of(post));
+
+        PostUpdateRequestDto postUpdateRequestDto = PostUpdateRequestDto.builder()
+                .title("업데이트 된 제목")
+                .content("업데이트 된 내용")
+                .build();
+        Long postIdBeforeUpdate = 1L;
+
+        // when
+        postService.updateAfterFindPost(postIdBeforeUpdate, postUpdateRequestDto);
+
+        // then
         verify(postRepository).findById(anyLong());
     }
 
