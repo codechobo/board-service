@@ -13,12 +13,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import javax.transaction.Transactional;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
@@ -38,6 +40,7 @@ class CommentServiceTest {
 
 
     @Test
+    @Transactional
     @DisplayName("댓글 저장한다")
     void saveComment() {
         // given
@@ -69,9 +72,9 @@ class CommentServiceTest {
         assertThat(commentSaveResponseDto.getContent()).isEqualTo(commentSaveRequestDto.getContent());
         assertThat(commentSaveResponseDto.getAuthor()).isEqualTo(commentSaveRequestDto.getAuthor());
 
-        verify(memberRepository).findByNickname(anyString());
-        verify(postRepository).findById(anyLong());
-        verify(commentRepository).save(any(Comment.class));
+        verify(memberRepository).findByNickname(commentSaveRequestDto.getAuthor());
+        verify(postRepository).findById(findPostId);
+        verify(commentRepository).save(comment);
     }
 
     @Test
@@ -108,9 +111,9 @@ class CommentServiceTest {
                         .isEqualTo(commentOfCommentRequestDto.getContent())
         );
 
-        verify(memberRepository).findByNickname(anyString());
-        verify(postRepository).findById(anyLong());
-        verify(commentRepository).findById(anyLong());
+        verify(memberRepository).findByNickname(commentOfCommentRequestDto.getAuthor());
+        verify(postRepository).findById(postId);
+        verify(commentRepository).findById(commentId);
     }
 
     @Test
@@ -129,7 +132,7 @@ class CommentServiceTest {
         assertThat(result.getAuthor()).isEqualTo(comment.getAuthor());
         assertThat(result.getContent()).isEqualTo(comment.getContent());
 
-        verify(commentRepository).findById(anyLong());
+        verify(commentRepository).findById(commentId);
     }
 
     @Test
@@ -153,7 +156,25 @@ class CommentServiceTest {
         // then
         assertThat(updateBeforeComment.getContent()).isEqualTo(commentUpdateRequestDto.getContent());
 
-        verify(commentRepository).findById(anyLong());
+        verify(commentRepository).findById(commentId);
+    }
+
+    @Test
+    @DisplayName("댓글 삭제하기")
+    void removeComment() {
+        // given
+        Long commentId = 1L;
+        Member member = createMember();
+        Comment comment = createComment(member, "처음댓글");
+
+        given(commentRepository.findById(anyLong())).willReturn(Optional.of(comment));
+        willDoNothing().given(commentRepository).delete(comment);
+
+        // when
+        commentService.removeComment(commentId);
+
+        // then
+        verify(commentRepository).delete(comment);
     }
 
     private Comment createComment(Member member, String content) {
