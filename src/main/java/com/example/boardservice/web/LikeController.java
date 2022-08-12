@@ -1,8 +1,10 @@
 package com.example.boardservice.web;
 
 import com.example.boardservice.service.LikeService;
-import com.example.boardservice.web.dto.LikeRequestDto;
-import com.example.boardservice.web.dto.LikeResponseDto;
+import com.example.boardservice.web.dto.like_dto.CommentLikeRequestDto;
+import com.example.boardservice.web.dto.like_dto.CommentLikeResponseDto;
+import com.example.boardservice.web.dto.like_dto.PostLikeRequestDto;
+import com.example.boardservice.web.dto.like_dto.PostsLikeResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,18 +19,26 @@ public class LikeController {
 
     private final LikeService likeService;
 
-    @PostMapping("/likes")
-    public ResponseEntity<LikeResponseDto> createLike(
-            @Valid @RequestBody LikeRequestDto likeRequestDto) {
-        LikeResponseDto likeResponseDto = likeService.saveLike(likeRequestDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(likeResponseDto);
+    @PostMapping("/posts/likes")
+    public ResponseEntity<PostsLikeResponseDto> createPostLike(
+            @Valid @RequestBody PostLikeRequestDto postLikeRequestDto) {
+        PostsLikeResponseDto postsLikeResponseDto = likeService.savePostLike(postLikeRequestDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(postsLikeResponseDto);
     }
 
-    @DeleteMapping("/likes")
-    public ResponseEntity<Void> deleteLike(
-            @Valid @RequestBody LikeRequestDto likeRequestDto) {
-        likeService.removeLike(likeRequestDto);
+    @PostMapping("/comments/likes")
+    public ResponseEntity<CommentLikeResponseDto> createCommentLike(
+            @Valid @RequestBody CommentLikeRequestDto commentLikeRequestDto) {
+        CommentLikeResponseDto commentLikeResponseDto = likeService.saveCommentLike(commentLikeRequestDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(commentLikeResponseDto);
+    }
+
+    @DeleteMapping("/posts/likes")
+    public ResponseEntity<Void> deletePostLike(
+            @Valid @RequestBody PostLikeRequestDto postLikeRequestDto) {
+        likeService.removePostLike(postLikeRequestDto);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
+
 
 }
