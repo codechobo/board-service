@@ -40,5 +40,10 @@ public class LikeController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-
+    @DeleteMapping("/comments/likes")
+    public ResponseEntity<Void> deleteCommentLike(
+            @Valid @RequestBody CommentLikeRequestDto commentLikeRequestDto) {
+        likeService.removeCommentLike(commentLikeRequestDto);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
 }
