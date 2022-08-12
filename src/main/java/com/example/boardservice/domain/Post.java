@@ -30,6 +30,8 @@ public class Post extends TimeEntity {
     @Column(name = "CONTENT")
     private String content; // 글 내용
 
+    private Like like;
+
     @Builder
     public Post(String title, String content) {
         this.title = title;

@@ -64,8 +64,4 @@ public class Comment extends TimeEntity {
     public void updateContent(String content) {
         this.content = content;
     }
-
-    public void deleteComment() {
-        getParent().getChild().remove(this);
-    }
 }
