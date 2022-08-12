@@ -4,7 +4,7 @@ import com.example.boardservice.domain.Member;
 import com.example.boardservice.domain.repository.MemberRepository;
 import com.example.boardservice.domain.repository.PostRepository;
 import com.example.boardservice.error.ErrorCode;
-import com.example.boardservice.web.dto.*;
+import com.example.boardservice.web.dto.member_dto.*;
 import com.sun.jdi.request.DuplicateRequestException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

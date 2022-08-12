@@ -1,4 +1,4 @@
-package com.example.boardservice.web.dto;
+package com.example.boardservice.web.dto.comment_dto;
 
 
 import lombok.AllArgsConstructor;

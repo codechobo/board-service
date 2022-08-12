@@ -1,6 +1,5 @@
-package com.example.boardservice.web.dto;
+package com.example.boardservice.web.dto.member_dto;
 
-import com.example.boardservice.domain.Member;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Getter;

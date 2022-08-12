@@ -1,7 +1,7 @@
 package com.example.boardservice.web;
 
 import com.example.boardservice.service.CommentService;
-import com.example.boardservice.web.dto.*;
+import com.example.boardservice.web.dto.comment_dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

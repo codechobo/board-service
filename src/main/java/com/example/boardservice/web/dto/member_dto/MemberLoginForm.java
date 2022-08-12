@@ -1,4 +1,4 @@
-package com.example.boardservice.web.dto;
+package com.example.boardservice.web.dto.member_dto;
 
 import lombok.*;
 
