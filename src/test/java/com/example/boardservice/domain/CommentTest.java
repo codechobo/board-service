@@ -1,5 +1,8 @@
 package com.example.boardservice.domain;
 
+import com.example.boardservice.module.comment.domain.Comment;
+import com.example.boardservice.module.member.domain.Member;
+import com.example.boardservice.module.post.domain.Post;
 import org.junit.jupiter.api.Test;
 
 class CommentTest {

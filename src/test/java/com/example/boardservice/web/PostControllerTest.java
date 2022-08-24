@@ -1,11 +1,12 @@
 package com.example.boardservice.web;
 
-import com.example.boardservice.domain.Post;
-import com.example.boardservice.service.PostService;
+import com.example.boardservice.module.post.domain.Post;
+import com.example.boardservice.module.post.web.PostController;
+import com.example.boardservice.module.post.service.PostService;
 import com.example.boardservice.service.PostServiceTest;
-import com.example.boardservice.web.model.post_model.PostSaveRequestDto;
-import com.example.boardservice.web.model.post_model.PostSaveResponseDto;
-import com.example.boardservice.web.model.post_model.PostUpdateRequestDto;
+import com.example.boardservice.module.post.web.post_model.PostSaveRequestDto;
+import com.example.boardservice.module.post.web.post_model.PostSaveResponseDto;
+import com.example.boardservice.module.post.web.post_model.PostUpdateRequestDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

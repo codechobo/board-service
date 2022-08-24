@@ -1,11 +1,12 @@
 package com.example.boardservice.service;
 
 import com.example.DtoInstanceProvider;
-import com.example.boardservice.domain.Member;
-import com.example.boardservice.domain.repository.MemberRepository;
-import com.example.boardservice.web.model.member_model.MemberSaveRequestDto;
-import com.example.boardservice.web.model.member_model.MemberSaveResponseDto;
-import com.example.boardservice.web.model.member_model.MemberUpdateRequestDto;
+import com.example.boardservice.module.member.domain.Member;
+import com.example.boardservice.module.member.domain.repository.MemberRepository;
+import com.example.boardservice.module.member.service.MemberService;
+import com.example.boardservice.module.member.web.model.MemberSaveRequestDto;
+import com.example.boardservice.module.member.web.model.MemberSaveResponseDto;
+import com.example.boardservice.module.member.web.model.MemberUpdateRequestDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

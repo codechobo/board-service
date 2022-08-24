@@ -1,10 +1,13 @@
 package com.example.boardservice.service;
 
-import com.example.boardservice.domain.Comment;
-import com.example.boardservice.domain.Member;
-import com.example.boardservice.domain.Post;
-import com.example.boardservice.domain.repository.MemberRepository;
-import com.example.boardservice.domain.repository.PostRepository;
+import com.example.boardservice.module.comment.domain.Comment;
+import com.example.boardservice.module.comment.domain.repository.CommentRepository;
+import com.example.boardservice.module.comment.service.CommentService;
+import com.example.boardservice.module.comment.web.comment_model.*;
+import com.example.boardservice.module.member.domain.Member;
+import com.example.boardservice.module.post.domain.Post;
+import com.example.boardservice.module.member.domain.repository.MemberRepository;
+import com.example.boardservice.module.post.domain.repository.PostRepository;
 import com.example.boardservice.web.model.comment_model.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
