@@ -19,8 +19,7 @@ public class MemberController {
     @PostMapping("/api/v1/members")
     public ResponseEntity<MemberSaveResponseDto> createMember(
             @Valid @RequestBody MemberSaveRequestDto memberSaveRequestDto) {
-        MemberSaveResponseDto memberSaveResponseDto =
-                memberService.saveMember(memberSaveRequestDto);
+        MemberSaveResponseDto memberSaveResponseDto = memberService.saveMember(memberSaveRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(memberSaveResponseDto);
     }
 
