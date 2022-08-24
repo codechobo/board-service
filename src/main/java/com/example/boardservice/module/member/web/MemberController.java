@@ -11,13 +11,12 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1")
 @RequiredArgsConstructor
 public class MemberController {
 
     private final MemberService memberService;
 
-    @PostMapping("/members")
+    @PostMapping("/api/v1/members")
     public ResponseEntity<MemberSaveResponseDto> createMember(
             @Valid @RequestBody MemberSaveRequestDto memberSaveRequestDto) {
         MemberSaveResponseDto memberSaveResponseDto =
@@ -25,39 +24,29 @@ public class MemberController {
         return ResponseEntity.status(HttpStatus.CREATED).body(memberSaveResponseDto);
     }
 
-    @GetMapping("/members/{id}")
+    @GetMapping("/api/v1/members/{id}")
     public ResponseEntity<MemberSaveResponseDto> readMemberById(
             @PathVariable("id") Long memberId) {
         MemberSaveResponseDto memberSaveResponseDto = memberService.findMemberById(memberId);
         return ResponseEntity.status(HttpStatus.OK).body(memberSaveResponseDto);
     }
 
-    @GetMapping("/members")
+    @GetMapping("/api/v1/members")
     public ResponseEntity<List<MemberSaveResponseDto>> readMembers() {
         List<MemberSaveResponseDto> members = memberService.findMembers();
         return ResponseEntity.status(HttpStatus.OK).body(members);
     }
 
-    @PutMapping("/members")
+    @PutMapping("/api/v1/members")
     public ResponseEntity<Void> updateMember(
             @Valid @RequestBody MemberUpdateRequestDto memberUpdateRequestDto) {
         memberService.updateAfterFindMember(memberUpdateRequestDto);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @DeleteMapping("/members/{id}")
+    @DeleteMapping("/api/v1/members/{id}")
     public ResponseEntity<Void> deleteMember(@PathVariable("id") Long memberId) {
         memberService.removeMember(memberId);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
-
-    @GetMapping("/members/login")
-    public ResponseEntity<MemberAuthResponseDto> checkedLoginInfo(
-            @RequestBody MemberLoginForm memberLoginForm) {
-        MemberAuthResponseDto memberAuthResponseDto = memberService
-                .getAuthInfoAfterVerifyingLoginInfo(memberLoginForm);
-
-        return ResponseEntity.status(HttpStatus.OK).body(memberAuthResponseDto);
-    }
-
 }

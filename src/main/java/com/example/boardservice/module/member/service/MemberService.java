@@ -81,21 +81,4 @@ public class MemberService {
         memberRepository.delete(entity);
     }
 
-    public MemberAuthResponseDto getAuthInfoAfterVerifyingLoginInfo(MemberLoginForm memberLoginForm) {
-        if (!memberRepository.existsByNickname(memberLoginForm.getNickname())) {
-            throw new EntityNotFoundException(ErrorCode.NOT_FOUND_ENTITY.getMessage());
-        }
-
-        if (!memberRepository.existsByPassword(memberLoginForm.getPassword())) {
-            throw new EntityNotFoundException(ErrorCode.NOT_FOUND_ENTITY.getMessage());
-        }
-
-        Member member = memberRepository.findByNickname(memberLoginForm.getNickname())
-                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.NOT_FOUND_ENTITY.getMessage()));
-
-        return MemberAuthResponseDto.builder()
-                .id(member.getId())
-                .nickName(member.getNickname())
-                .build();
-    }
 }

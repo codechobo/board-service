@@ -1,4 +1,4 @@
-package com.example.boardservice.error.dto;
+package com.example.boardservice.error.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
