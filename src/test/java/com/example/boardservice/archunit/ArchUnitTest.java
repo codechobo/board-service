@@ -19,7 +19,7 @@ public class ArchUnitTest {
     @ArchTest
     public ArchRule repositoryRule = classes()
             .that().resideInAnyPackage("..repository..")
-            .should().onlyBeAccessed().byAnyPackage("..web..", "..service..", "..repository");
+            .should().onlyBeAccessed()공.byAnyPackage("..web..", "..service..", "..repository");
 
     @ArchTest
     public ArchRule domainDependencyRule = noClasses().that()
