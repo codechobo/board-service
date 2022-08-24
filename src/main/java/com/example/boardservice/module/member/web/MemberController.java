@@ -1,14 +1,18 @@
 package com.example.boardservice.module.member.web;
 
 import com.example.boardservice.module.member.service.MemberService;
-import com.example.boardservice.module.member.web.model.*;
+import com.example.boardservice.module.member.web.model.MemberSaveRequestDto;
+import com.example.boardservice.module.member.web.model.MemberSaveResponseDto;
+import com.example.boardservice.module.member.web.model.MemberUpdateRequestDto;
+import com.example.boardservice.module.member.web.model.ResponseMembersPageDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -31,9 +35,11 @@ public class MemberController {
     }
 
     @GetMapping("/api/v1/members")
-    public ResponseEntity<List<MemberSaveResponseDto>> readMembers() {
-        List<MemberSaveResponseDto> members = memberService.findMembers();
-        return ResponseEntity.status(HttpStatus.OK).body(members);
+    public ResponseEntity<ResponseMembersPageDto> readMembers(
+            @RequestParam("name") String searchName, @PageableDefault(size = 6) Pageable pageable) {
+        ResponseMembersPageDto responseMembersPageDto =
+                memberService.getMemberListIncludingLastJoin(searchName, pageable);
+        return ResponseEntity.status(HttpStatus.OK).body(responseMembersPageDto);
     }
 
     @PutMapping("/api/v1/members")

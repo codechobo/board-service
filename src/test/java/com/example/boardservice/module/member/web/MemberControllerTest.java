@@ -1,8 +1,7 @@
-package com.example.boardservice.web;
+package com.example.boardservice.module.member.web;
 
 import com.example.DtoInstanceProvider;
 import com.example.boardservice.module.member.service.MemberService;
-import com.example.boardservice.module.member.web.MemberController;
 import com.example.boardservice.module.member.web.model.MemberSaveRequestDto;
 import com.example.boardservice.module.member.web.model.MemberSaveResponseDto;
 import com.example.boardservice.module.member.web.model.MemberUpdateRequestDto;

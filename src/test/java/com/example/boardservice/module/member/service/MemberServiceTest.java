@@ -1,18 +1,18 @@
-package com.example.boardservice.service;
+package com.example.boardservice.module.member.service;
 
 import com.example.DtoInstanceProvider;
 import com.example.boardservice.module.member.domain.Member;
 import com.example.boardservice.module.member.domain.repository.MemberRepository;
-import com.example.boardservice.module.member.service.MemberService;
-import com.example.boardservice.module.member.web.model.MemberSaveRequestDto;
-import com.example.boardservice.module.member.web.model.MemberSaveResponseDto;
-import com.example.boardservice.module.member.web.model.MemberUpdateRequestDto;
+import com.example.boardservice.module.member.web.model.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,9 +20,9 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.BDDMockito.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
@@ -68,28 +68,43 @@ class MemberServiceTest {
     }
 
     @Test
-    @DisplayName("Member 모든 정보 조회")
+    @DisplayName("이름으로 멤버 정보 리스트로 가져오기 -> 페이징 처리 내림차순")
     void findMembers() {
         // given
-        Member member = DtoInstanceProvider.createMemberSaveRequestDto().toEntity();
-        List<Member> members = new ArrayList<>() {{
-            add(member);
-        }};
+        List<ResponseMemberListDto> content = new ArrayList<>();
+        Member member = null;
+        for (int i = 0; i < 10; i++) {
+            member = DtoInstanceProvider.createMemberSaveRequestDto().toEntity();
 
-        given(memberRepository.findAll())
-                .willReturn(members);
+            ResponseMemberListDto responseMemberListDto = ResponseMemberListDto.builder()
+                    .name(member.getName())
+                    .nickname(member.getNickname())
+                    .email(member.getEmail())
+                    .joinedAt(member.getCreatedAt())
+                    .build();
+
+            content.add(responseMemberListDto);
+        }
+
+        Page<ResponseMemberListDto> page =
+                new PageImpl<>(content, Pageable.ofSize(5), content.size());
+
+        given(memberRepository.getMembersIncludingLastJoin(anyString(), any(Pageable.class)))
+                .willReturn(page);
 
         // when
-        List<MemberSaveResponseDto> result = memberService.findMembers();
+        ResponseMembersPageDto result = memberService
+                .getMemberListIncludingLastJoin(member.getName(), Pageable.ofSize(5));
 
         // then
         assertAll(
-                () -> assertThat(result.iterator().next().getNickname()).isEqualTo(member.getNickname()),
-                () -> assertThat(result.size()).isEqualTo(1),
-                () -> assertThat(result.get(0).getNickname()).isEqualTo(member.getNickname())
+                () -> assertThat(result.getElements().containsAll(content)).isTrue(),
+                () -> assertThat(result.getPageSize()).isEqualTo(5),
+                () -> assertThat(result.getCurrentPage()).isEqualTo(0),
+                () -> assertThat(result.getTotalPage()).isEqualTo(2)
         );
 
-        verify(memberRepository).findAll();
+        verify(memberRepository).getMembersIncludingLastJoin(member.getName(), Pageable.ofSize(5));
     }
 
     @Test

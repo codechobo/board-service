@@ -3,11 +3,11 @@ package com.example.boardservice.module.member.service;
 import com.example.boardservice.error.ErrorCode;
 import com.example.boardservice.module.member.domain.Member;
 import com.example.boardservice.module.member.domain.repository.MemberRepository;
-import com.example.boardservice.module.member.web.model.MemberSaveRequestDto;
-import com.example.boardservice.module.member.web.model.MemberSaveResponseDto;
-import com.example.boardservice.module.member.web.model.MemberUpdateRequestDto;
+import com.example.boardservice.module.member.web.model.*;
 import com.sun.jdi.request.DuplicateRequestException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -95,4 +95,9 @@ public class MemberService {
         return memberRepository.existsByNicknameAndEmailAndPassword(nickname, email, password);
     }
 
+    public ResponseMembersPageDto getMemberListIncludingLastJoin(String searchName, Pageable pageable) {
+        Page<ResponseMemberListDto> membersIncludingLastJoin =
+                memberRepository.getMembersIncludingLastJoin(searchName, pageable);
+        return ResponseMembersPageDto.toMapper(membersIncludingLastJoin);
+    }
 }
