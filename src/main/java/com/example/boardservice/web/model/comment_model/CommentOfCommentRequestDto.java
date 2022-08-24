@@ -1,21 +1,16 @@
-package com.example.boardservice.web.dto.post_dto;
+package com.example.boardservice.web.model.comment_model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotNull;
-
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class PostUpdateRequestDto {
+public class CommentOfCommentRequestDto {
 
-    @NotNull
-    private String title;
-
-    @NotNull
+    private String author;
     private String content;
 }

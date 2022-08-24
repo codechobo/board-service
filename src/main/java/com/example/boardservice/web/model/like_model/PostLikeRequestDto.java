@@ -1,4 +1,4 @@
-package com.example.boardservice.web.dto.like_dto;
+package com.example.boardservice.web.model.like_model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

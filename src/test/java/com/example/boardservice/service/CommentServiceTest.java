@@ -5,7 +5,7 @@ import com.example.boardservice.domain.Member;
 import com.example.boardservice.domain.Post;
 import com.example.boardservice.domain.repository.MemberRepository;
 import com.example.boardservice.domain.repository.PostRepository;
-import com.example.boardservice.web.dto.comment_dto.*;
+import com.example.boardservice.web.model.comment_model.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

@@ -2,9 +2,9 @@ package com.example.boardservice.web;
 
 import com.example.DtoInstanceProvider;
 import com.example.boardservice.service.MemberService;
-import com.example.boardservice.web.dto.member_dto.MemberSaveRequestDto;
-import com.example.boardservice.web.dto.member_dto.MemberSaveResponseDto;
-import com.example.boardservice.web.dto.member_dto.MemberUpdateRequestDto;
+import com.example.boardservice.web.model.member_model.MemberSaveRequestDto;
+import com.example.boardservice.web.model.member_model.MemberSaveResponseDto;
+import com.example.boardservice.web.model.member_model.MemberUpdateRequestDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

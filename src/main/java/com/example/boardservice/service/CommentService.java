@@ -6,7 +6,7 @@ import com.example.boardservice.domain.Post;
 import com.example.boardservice.domain.repository.MemberRepository;
 import com.example.boardservice.domain.repository.PostRepository;
 import com.example.boardservice.error.ErrorCode;
-import com.example.boardservice.web.dto.comment_dto.*;
+import com.example.boardservice.web.model.comment_model.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

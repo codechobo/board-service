@@ -1,4 +1,4 @@
-package com.example.boardservice.web.dto.member_dto;
+package com.example.boardservice.web.model.member_model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;

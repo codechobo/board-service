@@ -1,4 +1,4 @@
-package com.example.boardservice.web.dto.comment_dto;
+package com.example.boardservice.web.model.comment_model;
 
 
 import lombok.AllArgsConstructor;

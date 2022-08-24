@@ -1,6 +1,6 @@
 package com.example;
 
-import com.example.boardservice.web.dto.member_dto.MemberSaveRequestDto;
+import com.example.boardservice.web.model.member_model.MemberSaveRequestDto;
 
 public class DtoInstanceProvider {
 
