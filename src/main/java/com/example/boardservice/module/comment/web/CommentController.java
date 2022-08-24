@@ -1,7 +1,6 @@
 package com.example.boardservice.module.comment.web;
 
 import com.example.boardservice.module.comment.service.CommentService;
-import com.example.boardservice.comment.web.comment_model.*;
 import com.example.boardservice.module.comment.web.comment_model.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

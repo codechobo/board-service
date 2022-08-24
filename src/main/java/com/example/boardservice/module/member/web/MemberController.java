@@ -1,7 +1,6 @@
 package com.example.boardservice.module.member.web;
 
 import com.example.boardservice.module.member.service.MemberService;
-import com.example.boardservice.member.web.model.*;
 import com.example.boardservice.module.member.web.model.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

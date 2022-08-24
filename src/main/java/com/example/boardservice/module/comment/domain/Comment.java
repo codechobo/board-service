@@ -3,15 +3,13 @@ package com.example.boardservice.module.comment.domain;
 
 import com.example.boardservice.module.base.TimeEntity;
 import com.example.boardservice.module.post.domain.Post;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@EqualsAndHashCode(of = "id")
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor

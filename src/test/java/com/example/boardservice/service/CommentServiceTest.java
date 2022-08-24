@@ -5,10 +5,9 @@ import com.example.boardservice.module.comment.domain.repository.CommentReposito
 import com.example.boardservice.module.comment.service.CommentService;
 import com.example.boardservice.module.comment.web.comment_model.*;
 import com.example.boardservice.module.member.domain.Member;
-import com.example.boardservice.module.post.domain.Post;
 import com.example.boardservice.module.member.domain.repository.MemberRepository;
+import com.example.boardservice.module.post.domain.Post;
 import com.example.boardservice.module.post.domain.repository.PostRepository;
-import com.example.boardservice.web.model.comment_model.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,7 +15,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -45,7 +43,6 @@ class CommentServiceTest {
 
 
     @Test
-    @Transactional
     @DisplayName("댓글 저장한다")
     void saveComment() {
         // given
@@ -63,6 +60,7 @@ class CommentServiceTest {
                 .author(member.getNickname())
                 .content(commentSaveRequestDto.getContent())
                 .build();
+        comment.addPost(post);
 
         given(memberRepository.findByNickname(anyString())).willReturn(Optional.of(member));
         given(postRepository.findById(anyLong())).willReturn(Optional.of(post));

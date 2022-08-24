@@ -2,6 +2,7 @@ package com.example.boardservice.web;
 
 import com.example.DtoInstanceProvider;
 import com.example.boardservice.module.member.service.MemberService;
+import com.example.boardservice.module.member.web.MemberController;
 import com.example.boardservice.module.member.web.model.MemberSaveRequestDto;
 import com.example.boardservice.module.member.web.model.MemberSaveResponseDto;
 import com.example.boardservice.module.member.web.model.MemberUpdateRequestDto;
@@ -27,7 +28,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(controllers = MemberControllerTest.class)
+@WebMvcTest(controllers = MemberController.class)
 class MemberControllerTest {
 
     @Autowired

@@ -1,9 +1,8 @@
 package com.example.boardservice.module.comment.service;
 
+import com.example.boardservice.error.ErrorCode;
 import com.example.boardservice.module.comment.domain.Comment;
 import com.example.boardservice.module.comment.domain.repository.CommentRepository;
-import com.example.boardservice.comment.web.comment_model.*;
-import com.example.boardservice.error.ErrorCode;
 import com.example.boardservice.module.comment.web.comment_model.*;
 import com.example.boardservice.module.member.domain.Member;
 import com.example.boardservice.module.member.domain.repository.MemberRepository;
@@ -38,11 +37,11 @@ public class CommentService {
                 .build();
         comment.addPost(post);
 
-        commentRepository.save(comment);
+        Comment saveComment = commentRepository.save(comment);
 
         return CommentSaveResponseDto.builder()
-                .author(comment.getAuthor())
-                .content(comment.getContent())
+                .author(saveComment.getAuthor())
+                .content(saveComment.getContent())
                 .build();
     }
 

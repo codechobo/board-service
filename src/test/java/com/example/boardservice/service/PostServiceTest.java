@@ -1,8 +1,8 @@
 package com.example.boardservice.service;
 
 import com.example.boardservice.module.member.domain.Member;
-import com.example.boardservice.module.post.domain.Post;
 import com.example.boardservice.module.member.domain.repository.MemberRepository;
+import com.example.boardservice.module.post.domain.Post;
 import com.example.boardservice.module.post.domain.repository.PostRepository;
 import com.example.boardservice.module.post.service.PostService;
 import com.example.boardservice.module.post.web.post_model.PostSaveRequestDto;

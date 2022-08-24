@@ -1,13 +1,11 @@
 package com.example.boardservice.module.post.domain;
 
 import com.example.boardservice.module.base.TimeEntity;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
+@EqualsAndHashCode(of = "id")
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor

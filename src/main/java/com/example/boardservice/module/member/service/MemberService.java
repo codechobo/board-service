@@ -3,9 +3,7 @@ package com.example.boardservice.module.member.service;
 import com.example.boardservice.error.ErrorCode;
 import com.example.boardservice.module.member.domain.Member;
 import com.example.boardservice.module.member.domain.repository.MemberRepository;
-import com.example.boardservice.member.web.model.*;
 import com.example.boardservice.module.member.web.model.*;
-import com.example.boardservice.module.post.domain.repository.PostRepository;
 import com.sun.jdi.request.DuplicateRequestException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,7 +18,6 @@ import java.util.stream.Collectors;
 public class MemberService {
 
     private final MemberRepository memberRepository;
-    private final PostRepository postRepository;
 
     public MemberSaveResponseDto saveMember(MemberSaveRequestDto requestDto) {
         duplicatedCheck(requestDto.getNickname(), requestDto.getEmail(), requestDto.getPassword());

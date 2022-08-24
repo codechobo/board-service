@@ -1,9 +1,9 @@
 package com.example.boardservice.web;
 
+import com.example.boardservice.module.member.domain.Member;
 import com.example.boardservice.module.post.domain.Post;
-import com.example.boardservice.module.post.web.PostController;
 import com.example.boardservice.module.post.service.PostService;
-import com.example.boardservice.service.PostServiceTest;
+import com.example.boardservice.module.post.web.PostController;
 import com.example.boardservice.module.post.web.post_model.PostSaveRequestDto;
 import com.example.boardservice.module.post.web.post_model.PostSaveResponseDto;
 import com.example.boardservice.module.post.web.post_model.PostUpdateRequestDto;
@@ -31,7 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(controllers = PostController.class)
-class PostControllerTest extends PostServiceTest {
+class PostControllerTest{
 
     @Autowired
     MockMvc mockMvc;
@@ -152,5 +152,23 @@ class PostControllerTest extends PostServiceTest {
                 .andExpect(status().isOk());
 
         verify(postService).removePost(anyLong());
+    }
+
+    protected Post createPost() {
+        Post post = Post.builder()
+                .title("검정고무신 재밌지")
+                .content("기영이 때문에 본다!")
+                .build();
+        post.addAuthor(createMember().getNickname());
+        return post;
+    }
+
+    private Member createMember() {
+        return Member.builder()
+                .name("이기영")
+                .nickname("까까머리")
+                .password("test1234")
+                .email("test@naver.com")
+                .build();
     }
 }

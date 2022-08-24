@@ -29,9 +29,10 @@ public class PostService {
 
         Post post = postSaveRequestDto.toEntity();
         post.addAuthor(member.getNickname());
-        postRepository.save(post);
 
-        return PostSaveResponseDto.builder().post(post).build();
+        Post savedPost = postRepository.save(post);
+
+        return PostSaveResponseDto.builder().post(savedPost).build();
     }
 
     public PostSaveResponseDto findByPostId(Long postId) {
