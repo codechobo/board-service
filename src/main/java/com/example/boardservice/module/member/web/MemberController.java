@@ -36,7 +36,8 @@ public class MemberController {
 
     @GetMapping("/api/v1/members")
     public ResponseEntity<ResponseMembersPageDto> readMembers(
-            @RequestParam("name") String searchName, @PageableDefault(size = 6) Pageable pageable) {
+            @RequestParam(value = "name", required = false) String searchName,
+            @PageableDefault(size = 6) Pageable pageable) {
         ResponseMembersPageDto responseMembersPageDto =
                 memberService.getMemberListIncludingLastJoin(searchName, pageable);
         return ResponseEntity.status(HttpStatus.OK).body(responseMembersPageDto);

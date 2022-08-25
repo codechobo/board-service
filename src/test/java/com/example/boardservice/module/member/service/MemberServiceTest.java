@@ -137,8 +137,7 @@ class MemberServiceTest {
                 .password("test12345")
                 .build();
 
-        given(memberRepository.findById(anyLong()))
-                .willReturn(Optional.of(member));
+        given(memberRepository.findById(anyLong())).willReturn(Optional.of(member));
 
         // when
         memberService.updateAfterFindMember(memberUpdateRequestDto);
@@ -148,5 +147,20 @@ class MemberServiceTest {
         assertThat(member.getEmail()).isEqualTo(memberUpdateRequestDto.getEmail());
 
         verify(memberRepository).findById(anyLong());
+    }
+
+    @Test
+    @DisplayName("해당 엔티티를 찾지 못한 경우 EntityNotFoundException 예외가 발생하며 delete() 메서드가 실행되지 않아야 한다.")
+    void removeMember() {
+        // given
+        given(memberRepository.findById(anyLong()))
+                .willThrow(new EntityNotFoundException(ErrorCode.NOT_FOUND_ENTITY.getMessage()));
+
+        // when && then
+        assertThatThrownBy(() -> memberService.removeMember(1L))
+                .isInstanceOf(EntityNotFoundException.class)
+                .hasMessage(ErrorCode.NOT_FOUND_ENTITY.getMessage());
+
+        verify(memberRepository, times(0)).save(any(Member.class));
     }
 }

@@ -1,10 +1,10 @@
 package com.example.boardservice.module.member.web;
 
-import com.example.DtoInstanceProvider;
+import com.example.boardservice.error.ErrorCode;
+import com.example.boardservice.module.member.domain.Member;
 import com.example.boardservice.module.member.service.MemberService;
 import com.example.boardservice.module.member.web.dto.request.MemberSaveRequestDto;
 import com.example.boardservice.module.member.web.dto.response.MemberSaveResponseDto;
-import com.example.boardservice.module.member.web.dto.request.MemberUpdateRequestDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,16 +14,17 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.ArrayList;
-import java.util.List;
+import javax.persistence.EntityNotFoundException;
 
-import static org.hamcrest.Matchers.is;
+import java.util.Objects;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.willDoNothing;
-import static org.mockito.Mockito.verify;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -40,16 +41,18 @@ class MemberControllerTest {
     ObjectMapper objectMapper;
 
     @Test
-    @DisplayName("Member 정보 저장한다.")
-    void createMember() throws Exception {
+    @DisplayName("회원 정보 저장하는데 성공한다.")
+    void createMember_Success() throws Exception {
         // given
-        MemberSaveRequestDto memberSaveRequestDto =
-                DtoInstanceProvider.createMemberSaveRequestDto();
-
-        given(memberService.saveMember(any(MemberSaveRequestDto.class)))
-                .willReturn(MemberSaveResponseDto.builder()
-                        .member(memberSaveRequestDto.toEntity())
-                        .build());
+        MemberSaveRequestDto memberSaveRequestDto = MemberSaveRequestDto.builder()
+                .name("이기영")
+                .nickname("까까머리")
+                .email("기영@naver.com")
+                .password("test1234")
+                .build();
+        Member member = memberSaveRequestDto.toEntity();
+        MemberSaveResponseDto memberSaveResponseDto = MemberSaveResponseDto.builder().member(member).build();
+        given(memberService.saveMember(any(MemberSaveRequestDto.class))).willReturn(memberSaveResponseDto);
 
         // when && then
         mockMvc.perform(post("/api/v1/members")
@@ -57,100 +60,67 @@ class MemberControllerTest {
                         .content(objectMapper.writeValueAsString(memberSaveRequestDto)))
                 .andDo(print())
                 .andExpect(status().isCreated())
-                .andExpect(content().json(
-                        objectMapper.writeValueAsString(
-                                MemberSaveResponseDto
-                                        .builder()
-                                        .member(memberSaveRequestDto.toEntity())
-                                        .build())));
-
-        verify(memberService).saveMember(any(MemberSaveRequestDto.class));
+                .andExpect(content().json(objectMapper.writeValueAsString(memberSaveResponseDto)))
+                .andExpect(jsonPath("$.nickname").value(memberSaveResponseDto.getNickname()));
     }
 
     @Test
-    @DisplayName("Member 조회하다 -> Id 값으로")
-    void readMemberById() throws Exception {
-        // given
-        MemberSaveRequestDto memberSaveRequestDto = DtoInstanceProvider.createMemberSaveRequestDto();
-        MemberSaveResponseDto memberSaveResponseDto = MemberSaveResponseDto.builder()
-                .member(memberSaveRequestDto.toEntity())
+    @DisplayName("회원 정보를 저장하는데 중복된 정보가 저장되면 예외가 발생하며 저장이 되지 않는다.")
+    void createMember_Exception_Fail() throws Exception {
+        MemberSaveRequestDto memberSaveRequestDto = MemberSaveRequestDto.builder()
+                .name("이기영")
+                .nickname("까까머리")
+                .email("기영@naver.com")
+                .password("test1234")
                 .build();
-        given(memberService.findMemberById(anyLong()))
-                .willReturn(memberSaveResponseDto);
+        given(memberService.saveMember(any(MemberSaveRequestDto.class)))
+                .willThrow(new EntityNotFoundException(ErrorCode.NOT_FOUND_ENTITY.getMessage()));
 
-        // when && then
-        mockMvc.perform(get("/api/v1/members/" + 1L))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().json(objectMapper
-                        .writeValueAsString(memberSaveResponseDto)))
-                .andExpect(jsonPath("nickname", is(memberSaveRequestDto.getNickname())));
 
-        verify(memberService).findMemberById(anyLong());
-    }
-
-    @Test
-    @DisplayName("Member 모든 정보 조회")
-    void readMembers() throws Exception {
-        // given
-        MemberSaveRequestDto memberSaveRequestDto =
-                DtoInstanceProvider.createMemberSaveRequestDto();
-
-        MemberSaveResponseDto memberSaveResponseDto = MemberSaveResponseDto.builder()
-                .member(memberSaveRequestDto.toEntity())
-                .build();
-        List<MemberSaveResponseDto> list = new ArrayList<>() {{
-            add(memberSaveResponseDto);
-        }};
-
-        given(memberService.findMembers()).willReturn(list);
-
-        // when && then
-        mockMvc.perform(get("/api/v1/members"))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().json(
-                        objectMapper.writeValueAsString(list)));
-
-        verify(memberService).findMembers();
-    }
-
-    @Test
-    @DisplayName("Member 업데이트 하다")
-    void updateMember() throws Exception {
-        // given
-        MemberUpdateRequestDto memberUpdateRequestDto = MemberUpdateRequestDto.builder()
-                .memberId(1L)
-                .nickname("이기철")
-                .email("기철@naver.com")
-                .password("test12345")
-                .build();
-
-        willDoNothing().given(memberService)
-                .updateAfterFindMember(any(MemberUpdateRequestDto.class));
-
-        // when && then
-        mockMvc.perform(put("/api/v1/members")
+        mockMvc.perform(post("/api/v1/members")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper
-                                .writeValueAsString(memberUpdateRequestDto)))
+                        .content(objectMapper.writeValueAsString(memberSaveRequestDto)))
                 .andDo(print())
-                .andExpect(status().isOk());
-
-        verify(memberService)
-                .updateAfterFindMember(any(MemberUpdateRequestDto.class));
+                .andExpect(status().is(ErrorCode.REQUEST_DATA_DUPLICATED.getStatus().value()));
     }
 
     @Test
-    @DisplayName("Member 삭제 한다.")
-    void deleteMember() throws Exception {
-        willDoNothing().given(memberService).removeMember(anyLong());
+    @DisplayName("엔티티를 조회하는데 성공한다.")
+    void readMemberById_Success() throws Exception {
+        // given
+        MemberSaveRequestDto memberSaveRequestDto = MemberSaveRequestDto.builder()
+                .name("이기영")
+                .nickname("까까머리")
+                .email("기영@naver.com")
+                .password("test1234")
+                .build();
+        Member member = memberSaveRequestDto.toEntity();
+        MemberSaveResponseDto memberSaveResponseDto = MemberSaveResponseDto.builder().member(member).build();
+        given(memberService.findMemberById(anyLong())).willReturn(memberSaveResponseDto);
 
-        mockMvc.perform(delete("/api/v1/members/" + 1L))
+        // when && then
+        mockMvc.perform(get("/api/v1/members/1"))
                 .andDo(print())
-                .andExpect(status().isOk());
-
-        verify(memberService).removeMember(anyLong());;
+                .andExpect(status().isOk())
+                .andExpect(content().json(objectMapper.writeValueAsString(memberSaveResponseDto)));
     }
 
+    @Test
+    @DisplayName("엔티티를 찾지 못해 예외가 발생하며 조회에 실패한다.")
+    void readMemberById_Fail() throws Exception {
+        // given
+        given(memberService.findMemberById(anyLong()))
+                .willThrow(new EntityNotFoundException(ErrorCode.NOT_FOUND_ENTITY.getMessage()));
+
+        // when && then
+        mockMvc.perform(get("/api/v1/members/1"))
+                .andDo(print())
+                .andExpect(status().is(ErrorCode.NOT_FOUND_ENTITY.getStatus().value()))
+                .andExpect(result ->
+                        assertTrue(Objects.requireNonNull(result.getResolvedException())
+                                .getClass().isAssignableFrom(EntityNotFoundException.class)))
+                .andExpect(result ->
+                        assertEquals(Objects.requireNonNull(result.getResolvedException()).getMessage(),
+                                ErrorCode.NOT_FOUND_ENTITY.getMessage()));
+    }
 }
