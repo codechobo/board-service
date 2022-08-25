@@ -6,7 +6,6 @@ import com.example.boardservice.module.member.domain.Member;
 import com.example.boardservice.module.member.domain.repository.MemberRepository;
 import com.example.boardservice.module.member.web.dto.request.MemberSaveRequestDto;
 import com.example.boardservice.module.member.web.dto.request.MemberUpdateRequestDto;
-import com.example.boardservice.module.member.web.dto.response.MemberSaveResponseDto;
 import com.example.boardservice.module.member.web.dto.response.ResponseMemberListDto;
 import com.example.boardservice.module.member.web.dto.response.ResponseMembersPageDto;
 import com.sun.jdi.request.DuplicateRequestException;
@@ -20,6 +19,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -71,16 +71,13 @@ class MemberServiceTest {
     @DisplayName("멤버 조회시 memberId가 존재 하지 않을 때 EntityNotFoundException 예외가 발생한다.")
     void findMemberById() {
         // given
-        MemberSaveRequestDto memberSaveRequestDto = DtoInstanceProvider.createMemberSaveRequestDto();
         given(memberRepository.findById(anyLong()))
-                .willReturn(Optional.of(memberSaveRequestDto.toEntity()));
+                .willThrow(new EntityNotFoundException(ErrorCode.NOT_FOUND_ENTITY.getMessage()));
 
-        // when
-        MemberSaveResponseDto result = memberService.findMemberById(1L);
-
-        // then
-        assertThat(result.getNickname()).isEqualTo(memberSaveRequestDto.getNickname());
-        verify(memberRepository).findById(anyLong());
+        // when && then
+        assertThatThrownBy(() -> memberService.findMemberById(1L))
+                .isInstanceOf(EntityNotFoundException.class)
+                .hasMessage(ErrorCode.NOT_FOUND_ENTITY.getMessage());
     }
 
     @Test
