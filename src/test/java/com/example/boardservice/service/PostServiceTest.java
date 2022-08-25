@@ -36,7 +36,7 @@ public class PostServiceTest {
     PostService postService;
 
     @Test
-    @DisplayName("게시글 저장한다")
+    @DisplayName("게시글 저장하기")
     void savePost() {
         // given
         Member member = createMember();

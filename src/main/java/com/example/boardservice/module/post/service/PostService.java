@@ -5,17 +5,15 @@ import com.example.boardservice.module.member.domain.Member;
 import com.example.boardservice.module.member.domain.repository.MemberRepository;
 import com.example.boardservice.module.post.domain.Post;
 import com.example.boardservice.module.post.domain.repository.PostRepository;
-import com.example.boardservice.module.post.web.dto.PostSaveRequestDto;
-import com.example.boardservice.module.post.web.dto.PostSaveResponseDto;
-import com.example.boardservice.module.post.web.dto.PostUpdateRequestDto;
+import com.example.boardservice.module.post.web.dto.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -72,11 +70,14 @@ public class PostService {
         postRepository.delete(entity);
     }
 
-    public List<PostSaveResponseDto> findPosts() {
-        return postRepository.findAll().stream()
-                .map(post -> PostSaveResponseDto.builder()
-                        .post(post)
-                        .build())
-                .collect(Collectors.toList());
+    public ResponsePostPagingDto findPosts(RequestSearchPostDto requestSearchPostDto, Pageable pageable) {
+        Page<ResponsePostListDto> responsePostListDtos = postRepository
+                .getMembersIncludingLastCreate(
+                        requestSearchPostDto.getAuthor(),
+                        requestSearchPostDto.getTitle(),
+                        requestSearchPostDto.getContent(),
+                        pageable);
+
+        return ResponsePostPagingDto.toMapper(responsePostListDtos);
     }
 }

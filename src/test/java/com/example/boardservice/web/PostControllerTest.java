@@ -104,7 +104,7 @@ class PostControllerTest{
                         .build())
                 .collect(Collectors.toList());
 
-        given(postService.findPosts()).willReturn(result);
+        given(postService.findPosts(author, title, content, pageable)).willReturn(result);
 
         // when && then
         mockMvc.perform(get("/api/v1/posts"))
@@ -113,7 +113,7 @@ class PostControllerTest{
                 .andExpect(content().json(
                         objectMapper.writeValueAsString(result)));
 
-        verify(postService).findPosts();
+        verify(postService).findPosts(author, title, content, pageable);
     }
 
     @Test

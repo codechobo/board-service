@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
 
@@ -16,15 +16,15 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 public class PostSaveRequestDto {
 
-    @NotNull
+    @NotEmpty
     @Size(max = 30)
     private String author; // 글쓴이
 
-    @NotNull
+    @NotEmpty
     @Size(max = 100)
     private String title; // 제목
 
-    @NotNull
+    @NotEmpty
     private String content; // 글 내용
 
     public Post toEntity() {
