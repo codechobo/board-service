@@ -16,8 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -49,13 +47,10 @@ public class MemberService {
         return MemberSaveResponseDto.builder().member(member).build();
     }
 
-    /**
-     * @return 멤버 엔티티를 모두 가져와 MemberSaveResponseDto 로 변환 후 컬랙션 List 로 반환
-     */
-    public List<MemberSaveResponseDto> findMembers() {
-        return memberRepository.findAll().stream()
-                .map(member -> MemberSaveResponseDto.builder().member(member).build())
-                .collect(Collectors.toList());
+    public ResponseMembersPageDto getMemberListIncludingLastJoin(String searchName, Pageable pageable) {
+        Page<ResponseMemberListDto> membersIncludingLastJoin =
+                memberRepository.getMembersIncludingLastJoin(searchName, pageable);
+        return ResponseMembersPageDto.toMapper(membersIncludingLastJoin);
     }
 
     /**
@@ -97,11 +92,5 @@ public class MemberService {
 
     private boolean isExists(String nickname, String email, String password) {
         return memberRepository.existsByNicknameAndEmailAndPassword(nickname, email, password);
-    }
-
-    public ResponseMembersPageDto getMemberListIncludingLastJoin(String searchName, Pageable pageable) {
-        Page<ResponseMemberListDto> membersIncludingLastJoin =
-                memberRepository.getMembersIncludingLastJoin(searchName, pageable);
-        return ResponseMembersPageDto.toMapper(membersIncludingLastJoin);
     }
 }
