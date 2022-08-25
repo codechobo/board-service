@@ -1,6 +1,7 @@
 package com.example.boardservice.module.member.service;
 
 import com.example.DtoInstanceProvider;
+import com.example.boardservice.error.ErrorCode;
 import com.example.boardservice.module.member.domain.Member;
 import com.example.boardservice.module.member.domain.repository.MemberRepository;
 import com.example.boardservice.module.member.web.dto.request.MemberSaveRequestDto;
@@ -8,6 +9,7 @@ import com.example.boardservice.module.member.web.dto.request.MemberUpdateReques
 import com.example.boardservice.module.member.web.dto.response.MemberSaveResponseDto;
 import com.example.boardservice.module.member.web.dto.response.ResponseMemberListDto;
 import com.example.boardservice.module.member.web.dto.response.ResponseMembersPageDto;
+import com.sun.jdi.request.DuplicateRequestException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,10 +25,12 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
@@ -39,24 +43,32 @@ class MemberServiceTest {
     MemberService memberService;
 
     @Test
-    @DisplayName("Member 정보 저장한다.")
-    void saveMember() {
+    @DisplayName("회원 정보 저장시에 중복된 정보로 저장하는 경우 DuplicateRequestException 예외 발생한다 -> 저장 메서드가 호출 되지 않아야 한다.")
+    void saveMember_throwException() {
         // given
-        MemberSaveRequestDto memberSaveRequestDto = DtoInstanceProvider.createMemberSaveRequestDto();
-        given(memberRepository.save(any(Member.class)))
-                .willReturn(memberSaveRequestDto.toEntity());
+        MemberSaveRequestDto memberSaveRequestDto = MemberSaveRequestDto.builder()
+                .name("이기영")
+                .email("기영@naver.com")
+                .nickname("까까머리")
+                .password("test1234")
+                .build();
 
-        // when
-        MemberSaveResponseDto result = memberService
-                .saveMember(memberSaveRequestDto);
+        given(memberRepository.existsByNicknameAndEmailAndPassword(
+                memberSaveRequestDto.getNickname(),
+                memberSaveRequestDto.getEmail(),
+                memberSaveRequestDto.getPassword()))
+                .willReturn(Boolean.TRUE);
 
-        // then
-        assertThat(result.getNickname()).isEqualTo(memberSaveRequestDto.getNickname());
-        verify(memberRepository).save(any(Member.class));
+        // when && then
+        assertThatThrownBy(() -> memberService.saveMember(memberSaveRequestDto))
+                .isInstanceOf(DuplicateRequestException.class)
+                .hasMessage(ErrorCode.REQUEST_DATA_DUPLICATED.getMessage());
+
+        verify(memberRepository, times(0)).save(memberSaveRequestDto.toEntity());
     }
 
     @Test
-    @DisplayName("Member 정보 조회하다 -> id 값")
+    @DisplayName("멤버 조회시 memberId가 존재 하지 않을 때 EntityNotFoundException 예외가 발생한다.")
     void findMemberById() {
         // given
         MemberSaveRequestDto memberSaveRequestDto = DtoInstanceProvider.createMemberSaveRequestDto();
