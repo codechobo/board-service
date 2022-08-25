@@ -13,32 +13,31 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1")
 public class PostController {
 
     private final PostService postService;
 
-    @PostMapping("/posts")
+    @PostMapping("/api/v1/posts")
     public ResponseEntity<PostSaveResponseDto> createPost(
             @RequestBody PostSaveRequestDto postSaveRequestDto) {
         PostSaveResponseDto postSaveResponseDto = postService.savePost(postSaveRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(postSaveResponseDto);
     }
 
-    @GetMapping("/posts/{id}")
-    public ResponseEntity<PostSaveResponseDto> readPostById(
-            @PathVariable("id") Long postId) {
-        PostSaveResponseDto postSaveResponseDto = postService.findByPostId(postId);
+    @GetMapping("/api/v1/posts/{title}")
+    public ResponseEntity<PostSaveResponseDto> readPostByTitle(
+            @PathVariable("title") String title) {
+        PostSaveResponseDto postSaveResponseDto = postService.findByPostTitle(title);
         return ResponseEntity.status(HttpStatus.OK).body(postSaveResponseDto);
     }
 
-    @GetMapping("/posts")
+    @GetMapping("/api/v1/posts")
     public ResponseEntity<List<PostSaveResponseDto>> readPosts() {
         List<PostSaveResponseDto> posts = postService.findPosts();
         return ResponseEntity.status(HttpStatus.OK).body(posts);
     }
 
-    @PutMapping("/posts/{id}")
+    @PutMapping("/api/v1/posts/{id}")
     public ResponseEntity<Void> updatePost(
             @PathVariable("id") Long postId,
             @RequestBody PostUpdateRequestDto postUpdateRequestDto) {
@@ -46,7 +45,7 @@ public class PostController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @DeleteMapping("/posts/{id}")
+    @DeleteMapping("/api/v1/posts/{id}")
     public ResponseEntity<Void> deletePost(@PathVariable("id") Long postId) {
         postService.removePost(postId);
         return ResponseEntity.status(HttpStatus.OK).build();

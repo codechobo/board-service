@@ -45,4 +45,5 @@ public class Post extends TimeEntity {
     public void updateContent(String content) {
         this.content = content;
     }
+
 }

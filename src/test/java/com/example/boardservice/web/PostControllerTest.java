@@ -21,8 +21,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.hamcrest.Matchers.is;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.Mockito.verify;
@@ -78,7 +77,7 @@ class PostControllerTest{
         Post post = createPost();
         PostSaveResponseDto postSaveResponseDto = PostSaveResponseDto.builder()
                 .post(post).build();
-        given(postService.findByPostId(anyLong())).willReturn(postSaveResponseDto);
+        given(postService.findByPostTitle(anyString())).willReturn(postSaveResponseDto);
 
         // when && then
         mockMvc.perform(get("/api/v1/posts/" + 1L))
@@ -86,7 +85,7 @@ class PostControllerTest{
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(postSaveResponseDto)));
 
-        verify(postService).findByPostId(anyLong());
+        verify(postService).findByPostTitle(anyString());
     }
 
     @Test

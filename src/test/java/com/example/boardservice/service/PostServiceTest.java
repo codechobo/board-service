@@ -64,21 +64,21 @@ public class PostServiceTest {
     }
 
     @Test
-    @DisplayName("게시판 조회하다 -> pk로 조회")
+    @DisplayName("게시판 조회하다 -> title 로 조회")
     void findByPostId() {
         // given
         Post post = createPost();
-        given(postRepository.findById(anyLong())).willReturn(Optional.of(post));
+        given(postRepository.findByTitle(anyString())).willReturn(Optional.of(post));
 
         // when
-        PostSaveResponseDto postSaveResponseDto = postService.findByPostId(1L);
+        PostSaveResponseDto postSaveResponseDto = postService.findByPostTitle(post.getTitle());
 
         // then
         assertThat(postSaveResponseDto.getAuthor()).isEqualTo(post.getAuthor());
         assertThat(postSaveResponseDto.getTitle()).isEqualTo(post.getTitle());
         assertThat(postSaveResponseDto.getContent()).isEqualTo(post.getContent());
 
-        verify(postRepository).findById(anyLong());
+        verify(postRepository).findByTitle(post.getTitle());
     }
 
     @Test
