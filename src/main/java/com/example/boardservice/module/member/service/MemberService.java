@@ -47,6 +47,13 @@ public class MemberService {
         return MemberSaveResponseDto.builder().member(member).build();
     }
 
+    /**
+     * @param searchName
+     * @param pageable
+     * @return
+     *  이름으로 조회하여 리스트를 받는다.
+     *  리스트는 최근 회원 가입 된 기준으로 정렬된다.
+     */
     public ResponseMembersPageDto getMemberListIncludingLastJoin(String searchName, Pageable pageable) {
         Page<ResponseMemberListDto> membersIncludingLastJoin =
                 memberRepository.getMembersIncludingLastJoin(searchName, pageable);
