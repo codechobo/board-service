@@ -77,7 +77,7 @@ class PostControllerTest{
         Post post = createPost();
         PostSaveResponseDto postSaveResponseDto = PostSaveResponseDto.builder()
                 .post(post).build();
-        given(postService.findByPostTitle(anyString())).willReturn(postSaveResponseDto);
+        given(postService.findByPostId(anyLong())).willReturn(postSaveResponseDto);
 
         // when && then
         mockMvc.perform(get("/api/v1/posts/" + 1L))
@@ -85,7 +85,7 @@ class PostControllerTest{
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(postSaveResponseDto)));
 
-        verify(postService).findByPostTitle(anyString());
+        verify(postService).findByPostId(1L);
     }
 
     @Test

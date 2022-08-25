@@ -41,17 +41,24 @@ public class PostService {
         return memberRepository.findByNickname(postSaveRequestDto.getAuthor());
     }
 
-    public PostSaveResponseDto findByPostTitle(String title) {
-        Post post = getEntity(searchTitle(title),
+    public PostSaveResponseDto findByPostId(Long postId) {
+        Post post = getEntity(searchPostId(postId),
                 new EntityNotFoundException(ErrorCode.NOT_FOUND_ENTITY.getMessage()));
-
         return PostSaveResponseDto.builder()
                 .post(post)
                 .build();
     }
 
-    private Optional<Post> searchTitle(String title) {
-        return postRepository.findByTitle(title);
+    @Transactional
+    public void updateAfterFindPost(Long postId, PostUpdateRequestDto postUpdateRequestDto) {
+        Post entity = getEntity(searchPostId(postId),
+                new EntityNotFoundException(ErrorCode.NOT_FOUND_ENTITY.getMessage()));
+        entity.updateTitle(postUpdateRequestDto.getTitle());
+        entity.updateContent(postUpdateRequestDto.getContent());
+    }
+
+    private Optional<Post> searchPostId(Long id) {
+        return postRepository.findById(id);
     }
 
     private <T> T getEntity(Optional<T> optional, RuntimeException runtimeException) {
@@ -59,23 +66,10 @@ public class PostService {
     }
 
     @Transactional
-    public void updateAfterFindPost(Long postId, PostUpdateRequestDto postUpdateRequestDto) {
-        Post entity = getEntity(postId);
-
-        entity.updateTitle(postUpdateRequestDto.getTitle());
-        entity.updateContent(postUpdateRequestDto.getContent());
-    }
-
-    @Transactional
     public void removePost(Long postId) {
-        Post entity = getEntity(postId);
+        Post entity = getEntity(searchPostId(postId),
+                new EntityNotFoundException(ErrorCode.NOT_FOUND_ENTITY.getMessage()));
         postRepository.delete(entity);
-    }
-
-    private Post getEntity(Long postId) {
-        return postRepository.findById(postId)
-                .orElseThrow(() -> new EntityNotFoundException(
-                        ErrorCode.NOT_FOUND_ENTITY.getMessage()));
     }
 
     public List<PostSaveResponseDto> findPosts() {
