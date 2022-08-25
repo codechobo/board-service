@@ -27,7 +27,7 @@ public class Member extends TimeEntity {
     @Column(name = "NAME", nullable = false)
     private String name; // 이름
 
-    @Column(name = "NICKNAME", length = 30)
+    @Column(name = "NICKNAME", length = 30, nullable = false)
     private String nickname; // 닉네임
 
     @Column(name = "EMAIL", length = 100, nullable = false)

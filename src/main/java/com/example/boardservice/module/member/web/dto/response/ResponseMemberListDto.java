@@ -1,4 +1,4 @@
-package com.example.boardservice.module.member.web.model;
+package com.example.boardservice.module.member.web.dto.response;
 
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Builder;

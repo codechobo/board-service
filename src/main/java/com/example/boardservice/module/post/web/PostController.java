@@ -1,9 +1,9 @@
 package com.example.boardservice.module.post.web;
 
 import com.example.boardservice.module.post.service.PostService;
-import com.example.boardservice.module.post.web.post_model.PostSaveRequestDto;
-import com.example.boardservice.module.post.web.post_model.PostSaveResponseDto;
-import com.example.boardservice.module.post.web.post_model.PostUpdateRequestDto;
+import com.example.boardservice.module.post.web.dto.PostSaveRequestDto;
+import com.example.boardservice.module.post.web.dto.PostSaveResponseDto;
+import com.example.boardservice.module.post.web.dto.PostUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -1,4 +1,4 @@
-package com.example.boardservice.module.member.web.model;
+package com.example.boardservice.module.member.web.dto.response;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -1,4 +1,4 @@
-package com.example.boardservice.module.member.web.model;
+package com.example.boardservice.module.member.web.dto.request;
 
 import com.example.boardservice.module.member.domain.Member;
 import com.fasterxml.jackson.annotation.JsonProperty;

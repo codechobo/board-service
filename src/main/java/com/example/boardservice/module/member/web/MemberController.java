@@ -1,10 +1,10 @@
 package com.example.boardservice.module.member.web;
 
 import com.example.boardservice.module.member.service.MemberService;
-import com.example.boardservice.module.member.web.model.MemberSaveRequestDto;
-import com.example.boardservice.module.member.web.model.MemberSaveResponseDto;
-import com.example.boardservice.module.member.web.model.MemberUpdateRequestDto;
-import com.example.boardservice.module.member.web.model.ResponseMembersPageDto;
+import com.example.boardservice.module.member.web.dto.request.MemberSaveRequestDto;
+import com.example.boardservice.module.member.web.dto.response.MemberSaveResponseDto;
+import com.example.boardservice.module.member.web.dto.request.MemberUpdateRequestDto;
+import com.example.boardservice.module.member.web.dto.response.ResponseMembersPageDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;

@@ -5,9 +5,9 @@ import com.example.boardservice.module.member.domain.repository.MemberRepository
 import com.example.boardservice.module.post.domain.Post;
 import com.example.boardservice.module.post.domain.repository.PostRepository;
 import com.example.boardservice.module.post.service.PostService;
-import com.example.boardservice.module.post.web.post_model.PostSaveRequestDto;
-import com.example.boardservice.module.post.web.post_model.PostSaveResponseDto;
-import com.example.boardservice.module.post.web.post_model.PostUpdateRequestDto;
+import com.example.boardservice.module.post.web.dto.PostSaveRequestDto;
+import com.example.boardservice.module.post.web.dto.PostSaveResponseDto;
+import com.example.boardservice.module.post.web.dto.PostUpdateRequestDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

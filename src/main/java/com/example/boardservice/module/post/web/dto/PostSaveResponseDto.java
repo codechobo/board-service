@@ -1,4 +1,4 @@
-package com.example.boardservice.module.post.web.post_model;
+package com.example.boardservice.module.post.web.dto;
 
 import com.example.boardservice.module.post.domain.Post;
 import lombok.Builder;
