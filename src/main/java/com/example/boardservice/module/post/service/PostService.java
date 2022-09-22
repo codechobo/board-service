@@ -13,8 +13,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.Optional;
 
+@Transactional(readOnly = true)
 @Service
 @RequiredArgsConstructor
 public class PostService {
@@ -23,8 +23,7 @@ public class PostService {
     private final MemberRepository memberRepository;
 
     public PostSaveResponseDto savePost(PostSaveRequestDto postSaveRequestDto) {
-        Member member = getEntity(searchAuthor(postSaveRequestDto),
-                new EntityNotFoundException(ErrorCode.NOT_FOUND_ENTITY.getMessage()));
+        Member member = getMemberEntity(postSaveRequestDto);
 
         Post post = postSaveRequestDto.toEntity();
         post.addAuthor(member.getNickname());
@@ -35,13 +34,13 @@ public class PostService {
                 .build();
     }
 
-    private Optional<Member> searchAuthor(PostSaveRequestDto postSaveRequestDto) {
-        return memberRepository.findByNickname(postSaveRequestDto.getAuthor());
+    private Member getMemberEntity(PostSaveRequestDto postSaveRequestDto) {
+        return memberRepository.findByNickname(postSaveRequestDto.getAuthor())
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.NOT_FOUND_ENTITY.getMessage()));
     }
 
     public PostSaveResponseDto findByPostId(Long postId) {
-        Post post = getEntity(searchPostId(postId),
-                new EntityNotFoundException(ErrorCode.NOT_FOUND_ENTITY.getMessage()));
+        Post post = getPostEntity(postId);
         return PostSaveResponseDto.builder()
                 .post(post)
                 .build();
@@ -49,25 +48,15 @@ public class PostService {
 
     @Transactional
     public void updateAfterFindPost(Long postId, PostUpdateRequestDto postUpdateRequestDto) {
-        Post entity = getEntity(searchPostId(postId),
-                new EntityNotFoundException(ErrorCode.NOT_FOUND_ENTITY.getMessage()));
-        entity.updateTitle(postUpdateRequestDto.getTitle());
-        entity.updateContent(postUpdateRequestDto.getContent());
-    }
-
-    private Optional<Post> searchPostId(Long id) {
-        return postRepository.findById(id);
-    }
-
-    private <T> T getEntity(Optional<T> optional, RuntimeException runtimeException) {
-        return optional.orElseThrow(() -> runtimeException);
+        Post post = getPostEntity(postId);
+        post.updateTitle(postUpdateRequestDto.getTitle());
+        post.updateContent(postUpdateRequestDto.getContent());
     }
 
     @Transactional
     public void removePost(Long postId) {
-        Post entity = getEntity(searchPostId(postId),
-                new EntityNotFoundException(ErrorCode.NOT_FOUND_ENTITY.getMessage()));
-        postRepository.delete(entity);
+        Post post = getPostEntity(postId);
+        postRepository.delete(post);
     }
 
     public ResponsePostPagingDto findPosts(RequestSearchPostDto requestSearchPostDto, Pageable pageable) {
@@ -79,5 +68,10 @@ public class PostService {
                         pageable);
 
         return ResponsePostPagingDto.toMapper(responsePostListDtos);
+    }
+
+    private Post getPostEntity(Long postId) {
+        return postRepository.findById(postId)
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.NOT_FOUND_ENTITY.getMessage()));
     }
 }

@@ -17,16 +17,14 @@ public class PostController {
 
     private final PostService postService;
 
-    @PostMapping("/api/v1/posts")
-    public ResponseEntity<PostSaveResponseDto> createPost(
-            @Valid @RequestBody PostSaveRequestDto postSaveRequestDto) {
+    @PostMapping("/posts")
+    public ResponseEntity<PostSaveResponseDto> createPost(@Valid @RequestBody PostSaveRequestDto postSaveRequestDto) {
         PostSaveResponseDto postSaveResponseDto = postService.savePost(postSaveRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(postSaveResponseDto);
     }
 
-    @GetMapping("/api/v1/posts/{id}")
-    public ResponseEntity<PostSaveResponseDto> readPostById(
-            @PathVariable("id") Long postId) {
+    @GetMapping("/posts/{id}")
+    public ResponseEntity<PostSaveResponseDto> readPostById(@PathVariable("id") Long postId) {
         PostSaveResponseDto postSaveResponseDto = postService.findByPostId(postId);
         return ResponseEntity.status(HttpStatus.OK).body(postSaveResponseDto);
     }
