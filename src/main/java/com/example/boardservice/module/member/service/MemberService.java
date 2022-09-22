@@ -12,17 +12,19 @@ import com.sun.jdi.request.DuplicateRequestException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 
+@Transactional(readOnly = true)
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final PasswordEncoder passwordEncoder;
 
 
     /***
@@ -33,13 +35,21 @@ public class MemberService {
     public MemberSaveResponseDto saveMember(MemberSaveRequestDto requestDto) {
         duplicatedCheck(requestDto.getNickname(), requestDto.getEmail(), requestDto.getPassword());
 
-        Member member = memberRepository.save(requestDto.toEntity());
-        return MemberSaveResponseDto.builder().member(member).build();
+        Member newMember = Member.builder()
+                .name(requestDto.getName())
+                .nickname(requestDto.getNickname())
+                .email(requestDto.getEmail())
+                .password(passwordEncoder.encode(requestDto.getPassword()))
+                .build();
+
+        Member saveMember = memberRepository.save(newMember);
+        return MemberSaveResponseDto.builder().member(saveMember).build();
     }
 
     /***
      * @param memberId
      * @return memberSaveResponseDto
+     * @throws EntityNotFoundException
      * 엔티티가 존재하지 않는 경우 DuplicateRequestException 예외 발생
      * 존재 한다면 엔티티를 가져와 Dto 로 변환 후 반환
      */
@@ -51,7 +61,8 @@ public class MemberService {
     /**
      * @param searchName
      * @param pageable
-     * @return
+     * @return ResponseMemberPageDto
+     *
      *  이름으로 조회하여 리스트를 받는다.
      *  리스트는 최근 회원 가입 된 기준으로 정렬된다.
      */
@@ -62,19 +73,19 @@ public class MemberService {
     }
 
     /**
-     * @param requestDto 1. 멤버 엔티티가 있는 경우 -> 예외 생략...
-     *                   2. 중복체크를 하고 -> 예외 생략 ..
-     *                   3. 엔티티의 업데이트 메소드로 데이터를 변경하여
-     *                   4. 더티 체킹이 발생 되도록
+     * @param requestDto
+     *
+     * 1. 멤버 엔티티가 있는 경우 -> 예외 생략...
+     * 2. 중복체크를 하고 -> 예외 생략 ..
+     * 3. 엔티티의 업데이트 메소드로 데이터를 변경하여
+     * 4. 더티 체킹이 발생 되도록
      */
     @Transactional
     public void updateAfterFindMember(MemberUpdateRequestDto requestDto) {
         Member entity = getMemberEntity(requestDto.getMemberId());
         duplicatedCheck(requestDto.getNickname(), requestDto.getEmail(), requestDto.getPassword());
 
-        entity.updateNickname(requestDto.getNickname());
-        entity.updateEmail(requestDto.getEmail());
-        entity.updatePassword(requestDto.getPassword());
+        entity.updateMember(requestDto.getNickname(), passwordEncoder.encode(requestDto.getPassword()));
     }
 
     /**

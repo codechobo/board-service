@@ -2,8 +2,8 @@ package com.example.boardservice.module.member.web;
 
 import com.example.boardservice.module.member.service.MemberService;
 import com.example.boardservice.module.member.web.dto.request.MemberSaveRequestDto;
-import com.example.boardservice.module.member.web.dto.response.MemberSaveResponseDto;
 import com.example.boardservice.module.member.web.dto.request.MemberUpdateRequestDto;
+import com.example.boardservice.module.member.web.dto.response.MemberSaveResponseDto;
 import com.example.boardservice.module.member.web.dto.response.ResponseMembersPageDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -21,8 +21,7 @@ public class MemberController {
     private final MemberService memberService;
 
     @PostMapping("/api/v1/members")
-    public ResponseEntity<MemberSaveResponseDto> createMember(
-            @Valid @RequestBody MemberSaveRequestDto memberSaveRequestDto) {
+    public ResponseEntity<MemberSaveResponseDto> createMember(@Valid @RequestBody MemberSaveRequestDto memberSaveRequestDto) {
         MemberSaveResponseDto memberSaveResponseDto = memberService.saveMember(memberSaveRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(memberSaveResponseDto);
     }

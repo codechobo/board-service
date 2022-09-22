@@ -44,15 +44,9 @@ public class Member extends TimeEntity {
         this.password = password;
     }
 
-    public void updateNickname(String nickname) {
+    public void updateMember(String nickname, String password) {
         this.nickname = nickname;
-    }
-
-    public void updateEmail(String email) {
-        this.email = email;
-    }
-
-    public void updatePassword(String password) {
         this.password = password;
     }
+
 }
