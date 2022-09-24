@@ -18,13 +18,13 @@ public class PostController {
     private final PostService postService;
 
     @PostMapping("/posts")
-    public ResponseEntity<PostSaveResponseDto> createPost(@Valid @RequestBody PostSaveRequestDto postSaveRequestDto) {
-        PostSaveResponseDto postSaveResponseDto = postService.savePost(postSaveRequestDto);
+    public ResponseEntity<PostSaveResponseDto> createPost(@Valid @RequestBody PostSaveRequestDto requestDto) {
+        PostSaveResponseDto postSaveResponseDto = postService.savePost(requestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(postSaveResponseDto);
     }
 
     @GetMapping("/posts/{id}")
-    public ResponseEntity<PostSaveResponseDto> readPostById(@PathVariable("id") Long postId) {
+    public ResponseEntity<PostSaveResponseDto> getPosts(@PathVariable("id") Long postId) {
         PostSaveResponseDto postSaveResponseDto = postService.findByPostId(postId);
         return ResponseEntity.status(HttpStatus.OK).body(postSaveResponseDto);
     }
@@ -38,23 +38,21 @@ public class PostController {
      *  4. 본문 내용 즉, 게시글의 내용의 중심으로 조회하는 기능 -> 정렬 최신순
      *
      */
-    @GetMapping("/api/v1/posts")
-    public ResponseEntity<ResponsePostPagingDto> readPosts(
+    @GetMapping("/posts")
+    public ResponseEntity<ResponsePostPagingDto> getPostList(
             @RequestBody(required = false) RequestSearchPostDto requestSearchPostDto,
             @PageableDefault(size = 5) Pageable pageable) {
         ResponsePostPagingDto responsePostPagingDto = postService.findPosts(requestSearchPostDto, pageable);
         return ResponseEntity.status(HttpStatus.OK).body(responsePostPagingDto);
     }
 
-    @PutMapping("/api/v1/posts/{id}")
-    public ResponseEntity<Void> updatePost(
-            @PathVariable("id") Long postId,
-            @RequestBody PostUpdateRequestDto postUpdateRequestDto) {
-        postService.updateAfterFindPost(postId, postUpdateRequestDto);
+    @PutMapping("/posts/{id}")
+    public ResponseEntity<Void> updatePost(@PathVariable("id") Long postId, @RequestBody PostUpdateRequestDto requestDto) {
+        postService.updateAfterFindPost(postId, requestDto);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @DeleteMapping("/api/v1/posts/{id}")
+    @DeleteMapping("/posts/{id}")
     public ResponseEntity<Void> deletePost(@PathVariable("id") Long postId) {
         postService.removePost(postId);
         return ResponseEntity.status(HttpStatus.OK).build();
