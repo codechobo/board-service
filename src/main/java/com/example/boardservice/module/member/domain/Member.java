@@ -2,10 +2,12 @@ package com.example.boardservice.module.member.domain;
 
 
 import com.example.boardservice.module.base.TimeEntity;
+import com.example.boardservice.module.member.web.dto.request.RequestMemberSaveDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 
@@ -49,4 +51,16 @@ public class Member extends TimeEntity {
         this.password = password;
     }
 
+    public static Member createMember(RequestMemberSaveDto requestDto, PasswordEncoder passwordEncoder) {
+        return Member.builder()
+                .name(requestDto.getName())
+                .nickname(requestDto.getNickname())
+                .email(requestDto.getEmail())
+                .password(passwordEncoder.encode(requestDto.getPassword()))
+                .build();
+    }
+
+    public void updatePassword(String password) {
+        this.password = password;
+    }
 }

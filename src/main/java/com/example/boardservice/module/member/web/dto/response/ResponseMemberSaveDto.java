@@ -5,13 +5,13 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class MemberSaveResponseDto {
+public class ResponseMemberSaveDto {
 
     private final Long id;
     private final String nickname;
 
     @Builder
-    public MemberSaveResponseDto(Member member) {
+    public ResponseMemberSaveDto(Member member) {
         this.id = member.getId();
         this.nickname = member.getNickname();
     }

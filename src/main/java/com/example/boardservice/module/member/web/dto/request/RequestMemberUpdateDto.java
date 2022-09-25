@@ -1,6 +1,5 @@
 package com.example.boardservice.module.member.web.dto.request;
 
-import com.example.boardservice.module.member.domain.Member;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,12 +11,7 @@ import javax.validation.constraints.Size;
 
 @Getter
 @NoArgsConstructor
-public class MemberSaveRequestDto {
-
-    @Size(min = 1, max = 50)
-    @NotBlank
-    @JsonProperty("name")
-    private String name;
+public class RequestMemberUpdateDto {
 
     @Size(min = 1, max = 50)
     @NotBlank
@@ -35,20 +29,9 @@ public class MemberSaveRequestDto {
     private String password;
 
     @Builder
-    public MemberSaveRequestDto(String name, String nickname, String email, String password) {
-        this.name = name;
+    public RequestMemberUpdateDto(Long memberId, String nickname, String email, String password) {
         this.nickname = nickname;
         this.email = email;
         this.password = password;
     }
-
-    public Member toEntity() {
-        return Member.builder()
-                .name(this.name)
-                .nickname(this.nickname)
-                .email(this.email)
-                .password(this.password)
-                .build();
-    }
-
 }
