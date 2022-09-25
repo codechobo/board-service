@@ -36,7 +36,8 @@ class MemberRepositoryTest {
                 .password("test1234")
                 .email("test@naver.com")
                 .build();
-        Member member = Member.createMember(dto, passwordEncoder);
+        Member member = Member.createMember(dto);
+        member.updatePassword(passwordEncoder.encode(member.getPassword()));
         memberRepository.save(member);
 
         boolean result = memberRepository.existsByNicknameOrPasswordOrEmail("까까머리", "test1234", "기영@naver.com");

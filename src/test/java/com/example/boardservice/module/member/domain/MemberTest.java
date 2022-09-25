@@ -37,9 +37,8 @@ class MemberTest {
         assertEquals(member.getNickname(), nickname);
         assertEquals(member.getPassword(), password);
 
-        member.updateMember(updateNickname, updatePassword);
+        member.updatePassword(updatePassword);
 
-        assertEquals(member.getNickname(), updateNickname);
         assertEquals(member.getPassword(), updatePassword);
     }
 

@@ -30,7 +30,10 @@ public class MemberService {
     @Transactional
     public ResponseMemberSaveDto saveMember(RequestMemberSaveDto requestDto) {
         duplicatedCheck(requestDto);
-        Member member = Member.createMember(requestDto, passwordEncoder);
+
+        Member member = Member.createMember(requestDto);
+        member.updatePassword(passwordEncoder.encode(requestDto.getPassword()));
+
         Member saveMember = memberRepository.save(member);
         return ResponseMemberSaveDto.builder().member(saveMember).build();
     }

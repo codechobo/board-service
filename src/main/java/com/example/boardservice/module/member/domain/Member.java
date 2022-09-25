@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 
@@ -46,17 +45,12 @@ public class Member extends TimeEntity {
         this.password = password;
     }
 
-    public void updateMember(String nickname, String password) {
-        this.nickname = nickname;
-        this.password = password;
-    }
-
-    public static Member createMember(RequestMemberSaveDto requestDto, PasswordEncoder passwordEncoder) {
+    public static Member createMember(RequestMemberSaveDto requestDto) {
         return Member.builder()
                 .name(requestDto.getName())
                 .nickname(requestDto.getNickname())
                 .email(requestDto.getEmail())
-                .password(passwordEncoder.encode(requestDto.getPassword()))
+                .password(requestDto.getPassword())
                 .build();
     }
 

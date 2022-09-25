@@ -40,8 +40,12 @@ class MemberServiceTest {
         String email = "기영@naver.com";
         String password = "test1234";
 
+        RequestMemberSaveDto dto = RequestDtoFactories.createMemberSaveRequestDto();
+        Member member = createMember(dto);
+        memberRepository.save(member);
+
         // when
-        Member member = memberRepository.findByNickname(nickname).get();
+        Member findMember = memberRepository.findByNickname(nickname).get();
 
         // then
         assertNotNull(member);
@@ -55,7 +59,7 @@ class MemberServiceTest {
     void saveMember_fail() {
         // given
         RequestMemberSaveDto dto = RequestDtoFactories.createMemberSaveRequestDto();
-        Member member = Member.createMember(dto, passwordEncoder);
+        Member member = createMember(dto);
         memberRepository.save(member);
 
         // when && then
@@ -69,7 +73,7 @@ class MemberServiceTest {
     void getMemberListIncludingLastJoin() {
         // given
         RequestMemberSaveDto dto = RequestDtoFactories.createMemberSaveRequestDto();
-        Member member = Member.createMember(dto, passwordEncoder);
+        Member member = createMember(dto);
         memberRepository.save(member);
 
         // when
@@ -88,7 +92,7 @@ class MemberServiceTest {
     void updateAfterFindMember_success() {
         // given
         RequestMemberSaveDto dto = RequestDtoFactories.createMemberSaveRequestDto();
-        Member member = Member.createMember(dto, passwordEncoder);
+        Member member = createMember(dto);
         Member saveMember = memberRepository.save(member);
 
         RequestPasswordUpdateDto passwordUpdateDto = new RequestPasswordUpdateDto();
@@ -108,7 +112,7 @@ class MemberServiceTest {
     void updateAfterFindMember_fail() {
         // given
         RequestMemberSaveDto dto = RequestDtoFactories.createMemberSaveRequestDto();
-        Member member = Member.createMember(dto, passwordEncoder);
+        Member member = createMember(dto);
         Member saveMember = memberRepository.save(member);
 
         RequestPasswordUpdateDto passwordUpdateDto = new RequestPasswordUpdateDto();
@@ -126,7 +130,7 @@ class MemberServiceTest {
     void removeMember_success() {
         // given
         RequestMemberSaveDto dto = RequestDtoFactories.createMemberSaveRequestDto();
-        Member member = Member.createMember(dto, passwordEncoder);
+        Member member = createMember(dto);
         Member saveMember = memberRepository.save(member);
 
         memberService.removeMember(saveMember.getId());
@@ -138,4 +142,12 @@ class MemberServiceTest {
                 .hasMessage(ErrorCode.NOT_FOUND_ENTITY.getMessage());
     }
 
+    private Member createMember(RequestMemberSaveDto dto) {
+        return Member.builder()
+                .name(dto.getName())
+                .nickname(dto.getNickname())
+                .email(dto.getEmail())
+                .password(passwordEncoder.encode(dto.getPassword()))
+                .build();
+    }
 }
