@@ -4,6 +4,7 @@ import com.example.boardservice.error.ErrorCode;
 import com.example.boardservice.module.member.domain.Member;
 import com.example.boardservice.module.member.domain.repository.MemberRepository;
 import com.example.boardservice.module.member.exception.NotMatchPasswordException;
+import com.example.boardservice.module.member.web.dto.RequestNicknameUpdateDto;
 import com.example.boardservice.module.member.web.dto.request.RequestPasswordUpdateDto;
 import com.example.boardservice.module.member.web.dto.request.RequestMemberSaveDto;
 import com.example.boardservice.module.member.web.dto.response.ResponseMemberSaveDto;
@@ -19,9 +20,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 
-@Transactional(readOnly = true)
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class MemberService {
 
     private final MemberRepository memberRepository;
@@ -67,7 +68,7 @@ public class MemberService {
         member.updatePassword(passwordEncoder.encode(passwordUpdateDto.getNewPassword()));
     }
 
-    private static void passwordMatch(RequestPasswordUpdateDto passwordUpdateDto) {
+    private void passwordMatch(RequestPasswordUpdateDto passwordUpdateDto) {
         if (!isMatch(passwordUpdateDto)) {
             throw new NotMatchPasswordException(ErrorCode.NOT_MATCH_PASSWORD);
         }
@@ -75,6 +76,20 @@ public class MemberService {
 
     private static boolean isMatch(RequestPasswordUpdateDto passwordUpdateDto) {
         return passwordUpdateDto.getNewPassword().equals(passwordUpdateDto.getNewPasswordConfirm());
+    }
+
+    @Transactional
+    public void updateNicknameAfterFindMember(Long memberId, RequestNicknameUpdateDto requestNicknameUpdateDto) {
+        if (isDuplicatedNicknameCheck(requestNicknameUpdateDto)) {
+            throw new DuplicateRequestException(ErrorCode.REQUEST_DATA_DUPLICATED.getMessage());
+        }
+
+        Member member = getMemberEntity(memberId);
+        member.updateNickname(requestNicknameUpdateDto.getNickname());
+    }
+
+    private boolean isDuplicatedNicknameCheck(RequestNicknameUpdateDto requestNicknameUpdateDto) {
+        return memberRepository.existsByNickname(requestNicknameUpdateDto.getNickname());
     }
 
     @Transactional
@@ -87,5 +102,4 @@ public class MemberService {
         return memberRepository.findById(memberId)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.NOT_FOUND_ENTITY.getMessage()));
     }
-
 }

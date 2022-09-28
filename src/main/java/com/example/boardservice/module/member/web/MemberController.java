@@ -1,9 +1,10 @@
 package com.example.boardservice.module.member.web;
 
 import com.example.boardservice.module.member.service.MemberService;
-import com.example.boardservice.module.member.web.dto.request.MemberSaveRequestDto;
-import com.example.boardservice.module.member.web.dto.request.MemberUpdateRequestDto;
-import com.example.boardservice.module.member.web.dto.response.MemberSaveResponseDto;
+import com.example.boardservice.module.member.web.dto.RequestNicknameUpdateDto;
+import com.example.boardservice.module.member.web.dto.request.RequestMemberSaveDto;
+import com.example.boardservice.module.member.web.dto.request.RequestPasswordUpdateDto;
+import com.example.boardservice.module.member.web.dto.response.ResponseMemberSaveDto;
 import com.example.boardservice.module.member.web.dto.response.ResponseMembersPageDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -20,36 +21,40 @@ public class MemberController {
 
     private final MemberService memberService;
 
-    @PostMapping("/api/v1/members")
-    public ResponseEntity<MemberSaveResponseDto> createMember(@Valid @RequestBody MemberSaveRequestDto memberSaveRequestDto) {
-        MemberSaveResponseDto memberSaveResponseDto = memberService.saveMember(memberSaveRequestDto);
+    @PostMapping("/members")
+    public ResponseEntity<ResponseMemberSaveDto> createMember(@Valid @RequestBody RequestMemberSaveDto memberSaveRequestDto) {
+        ResponseMemberSaveDto memberSaveResponseDto = memberService.saveMember(memberSaveRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(memberSaveResponseDto);
     }
 
-    @GetMapping("/api/v1/members/{id}")
-    public ResponseEntity<MemberSaveResponseDto> readMemberById(
-            @PathVariable("id") Long memberId) {
-        MemberSaveResponseDto memberSaveResponseDto = memberService.findMemberById(memberId);
+    @GetMapping("/members/{id}")
+    public ResponseEntity<ResponseMemberSaveDto> getMember(@PathVariable("id") Long memberId) {
+        ResponseMemberSaveDto memberSaveResponseDto = memberService.findMemberById(memberId);
         return ResponseEntity.status(HttpStatus.OK).body(memberSaveResponseDto);
     }
 
-    @GetMapping("/api/v1/members")
-    public ResponseEntity<ResponseMembersPageDto> readMembers(
-            @RequestParam(value = "name", required = false) String searchName,
-            @PageableDefault(size = 6) Pageable pageable) {
-        ResponseMembersPageDto responseMembersPageDto =
-                memberService.getMemberListIncludingLastJoin(searchName, pageable);
+    @GetMapping("/members")
+    public ResponseEntity<ResponseMembersPageDto> getMembers(@RequestParam(value = "name", required = false) String searchName,
+                                                             @PageableDefault(size = 6) Pageable pageable) {
+        ResponseMembersPageDto responseMembersPageDto = memberService.getMemberListIncludingLastJoin(searchName, pageable);
         return ResponseEntity.status(HttpStatus.OK).body(responseMembersPageDto);
     }
 
-    @PutMapping("/api/v1/members")
-    public ResponseEntity<Void> updateMember(
-            @Valid @RequestBody MemberUpdateRequestDto memberUpdateRequestDto) {
-        memberService.updateAfterFindMember(memberUpdateRequestDto);
+    @PutMapping("/members/{id}/password")
+    public ResponseEntity<Void> updatePassword(@PathVariable("id") Long memberId,
+                                               @Valid @RequestBody RequestPasswordUpdateDto requestPasswordUpdateDto) {
+        memberService.updatePasswordAfterFindMember(memberId, requestPasswordUpdateDto);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @DeleteMapping("/api/v1/members/{id}")
+    @PutMapping("/members/{id}/nickname")
+    public ResponseEntity<Void> updateNickname(@PathVariable("id") Long memberId,
+                                               @Valid @RequestBody RequestNicknameUpdateDto requestNicknameUpdateDto) {
+        memberService.updateNicknameAfterFindMember(memberId, requestNicknameUpdateDto);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @DeleteMapping("/members/{id}")
     public ResponseEntity<Void> deleteMember(@PathVariable("id") Long memberId) {
         memberService.removeMember(memberId);
         return ResponseEntity.status(HttpStatus.OK).build();
