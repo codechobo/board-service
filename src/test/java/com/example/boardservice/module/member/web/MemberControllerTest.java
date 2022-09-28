@@ -1,21 +1,24 @@
 package com.example.boardservice.module.member.web;
 
 import com.example.boardservice.error.ErrorCode;
+import com.example.boardservice.factory.RequestDtoFactory;
 import com.example.boardservice.module.member.domain.Member;
+import com.example.boardservice.module.member.domain.repository.MemberRepository;
 import com.example.boardservice.module.member.service.MemberService;
-import com.example.boardservice.module.member.web.dto.request.MemberSaveRequestDto;
-import com.example.boardservice.module.member.web.dto.response.MemberSaveResponseDto;
+import com.example.boardservice.module.member.web.dto.request.RequestMemberSaveDto;
+import com.example.boardservice.module.member.web.dto.response.ResponseMemberSaveDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import javax.persistence.EntityNotFoundException;
-
 import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -23,57 +26,50 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(controllers = MemberController.class)
+@SpringBootTest
+@AutoConfigureMockMvc
 class MemberControllerTest {
 
-    @Autowired
-    MockMvc mockMvc;
+    @Autowired MockMvc mockMvc;
+    @Autowired MemberService memberService;
+    @Autowired MemberRepository memberRepository;
+    @Autowired PasswordEncoder passwordEncoder;
+    @Autowired ObjectMapper objectMapper;
 
-    @MockBean
-    MemberService memberService;
-
-    @Autowired
-    ObjectMapper objectMapper;
-
+    @WithMockUser
     @Test
     @DisplayName("회원 정보 저장하는데 성공한다.")
-    void createMember_Success() throws Exception {
+    void createMember_success() throws Exception {
         // given
-        MemberSaveRequestDto memberSaveRequestDto = MemberSaveRequestDto.builder()
-                .name("이기영")
-                .nickname("까까머리")
-                .email("기영@naver.com")
-                .password("test1234")
-                .build();
-        Member member = memberSaveRequestDto.toEntity();
-        MemberSaveResponseDto memberSaveResponseDto = MemberSaveResponseDto.builder().member(member).build();
-        given(memberService.saveMember(any(MemberSaveRequestDto.class))).willReturn(memberSaveResponseDto);
+        RequestMemberSaveDto requestDto = RequestDtoFactory.createMemberSaveRequestDto();
 
         // when && then
-        mockMvc.perform(post("/api/v1/members")
+        mockMvc.perform(post("/members")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(memberSaveRequestDto)))
+                        .content(objectMapper.writeValueAsString(requestDto))
+                        .with(csrf()))
                 .andDo(print())
                 .andExpect(status().isCreated())
-                .andExpect(content().json(objectMapper.writeValueAsString(memberSaveResponseDto)))
-                .andExpect(jsonPath("$.nickname").value(memberSaveResponseDto.getNickname()));
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
     }
 
     @Test
     @DisplayName("회원 정보를 저장하는데 중복된 정보가 저장되면 예외가 발생하며 저장이 되지 않는다.")
     void createMember_Exception_Fail() throws Exception {
-        MemberSaveRequestDto memberSaveRequestDto = MemberSaveRequestDto.builder()
+        RequestMemberSaveDto memberSaveRequestDto = RequestMemberSaveDto.builder()
                 .name("이기영")
                 .nickname("까까머리")
                 .email("기영@naver.com")
                 .password("test1234")
                 .build();
-        given(memberService.saveMember(any(MemberSaveRequestDto.class)))
+        given(memberService.saveMember(any(RequestMemberSaveDto.class)))
                 .willThrow(new EntityNotFoundException(ErrorCode.NOT_FOUND_ENTITY.getMessage()));
 
 
@@ -88,14 +84,14 @@ class MemberControllerTest {
     @DisplayName("엔티티를 조회하는데 성공한다.")
     void readMemberById_Success() throws Exception {
         // given
-        MemberSaveRequestDto memberSaveRequestDto = MemberSaveRequestDto.builder()
+        RequestMemberSaveDto memberSaveRequestDto = RequestMemberSaveDto.builder()
                 .name("이기영")
                 .nickname("까까머리")
                 .email("기영@naver.com")
                 .password("test1234")
                 .build();
         Member member = memberSaveRequestDto.toEntity();
-        MemberSaveResponseDto memberSaveResponseDto = MemberSaveResponseDto.builder().member(member).build();
+        ResponseMemberSaveDto memberSaveResponseDto = ResponseMemberSaveDto.builder().member(member).build();
         given(memberService.findMemberById(anyLong())).willReturn(memberSaveResponseDto);
 
         // when && then

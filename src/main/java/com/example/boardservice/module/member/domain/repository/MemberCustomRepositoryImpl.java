@@ -1,6 +1,6 @@
 package com.example.boardservice.module.member.domain.repository;
 
-import com.example.boardservice.module.member.web.dto.QResponseMemberListDto;
+import com.example.boardservice.module.member.web.dto.response.QResponseMemberListDto;
 import com.example.boardservice.module.member.web.dto.response.ResponseMemberListDto;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;

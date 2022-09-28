@@ -1,7 +1,7 @@
 package com.example.boardservice.module.member.service;
 
 import com.example.boardservice.error.ErrorCode;
-import com.example.boardservice.factory.RequestDtoFactories;
+import com.example.boardservice.factory.RequestDtoFactory;
 import com.example.boardservice.module.member.domain.Member;
 import com.example.boardservice.module.member.domain.repository.MemberRepository;
 import com.example.boardservice.module.member.exception.NotMatchPasswordException;
@@ -40,7 +40,7 @@ class MemberServiceTest {
         String email = "기영@naver.com";
         String password = "test1234";
 
-        RequestMemberSaveDto dto = RequestDtoFactories.createMemberSaveRequestDto();
+        RequestMemberSaveDto dto = RequestDtoFactory.createMemberSaveRequestDto();
         Member member = createMember(dto);
         memberRepository.save(member);
 
@@ -58,7 +58,7 @@ class MemberServiceTest {
     @DisplayName("회원 정보 저장 테스트 실패 -> 중복된 정보 포함하여 DuplicateRequestException 예외 던짐")
     void saveMember_fail() {
         // given
-        RequestMemberSaveDto dto = RequestDtoFactories.createMemberSaveRequestDto();
+        RequestMemberSaveDto dto = RequestDtoFactory.createMemberSaveRequestDto();
         Member member = createMember(dto);
         memberRepository.save(member);
 
@@ -72,7 +72,7 @@ class MemberServiceTest {
     @DisplayName("회원 이름으로 검색하여 가입 시간 기준으로 최신으로 정렬 한 다음 회원 페이지 리스트 가져오기 테스트")
     void getMemberListIncludingLastJoin() {
         // given
-        RequestMemberSaveDto dto = RequestDtoFactories.createMemberSaveRequestDto();
+        RequestMemberSaveDto dto = RequestDtoFactory.createMemberSaveRequestDto();
         Member member = createMember(dto);
         memberRepository.save(member);
 
@@ -91,7 +91,7 @@ class MemberServiceTest {
     @DisplayName("회원 비밀번호 업데이트 테스트 성공")
     void updateAfterFindMember_success() {
         // given
-        RequestMemberSaveDto dto = RequestDtoFactories.createMemberSaveRequestDto();
+        RequestMemberSaveDto dto = RequestDtoFactory.createMemberSaveRequestDto();
         Member member = createMember(dto);
         Member saveMember = memberRepository.save(member);
 
@@ -111,7 +111,7 @@ class MemberServiceTest {
     @DisplayName("회원 비밀번호가 일치하지 않는 경우 업데이트 실패")
     void updateAfterFindMember_fail() {
         // given
-        RequestMemberSaveDto dto = RequestDtoFactories.createMemberSaveRequestDto();
+        RequestMemberSaveDto dto = RequestDtoFactory.createMemberSaveRequestDto();
         Member member = createMember(dto);
         Member saveMember = memberRepository.save(member);
 
@@ -129,7 +129,7 @@ class MemberServiceTest {
     @DisplayName("회원 정보 삭제 테스트 성공")
     void removeMember_success() {
         // given
-        RequestMemberSaveDto dto = RequestDtoFactories.createMemberSaveRequestDto();
+        RequestMemberSaveDto dto = RequestDtoFactory.createMemberSaveRequestDto();
         Member member = createMember(dto);
         Member saveMember = memberRepository.save(member);
 
