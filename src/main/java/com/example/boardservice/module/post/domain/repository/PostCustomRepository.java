@@ -1,6 +1,6 @@
 package com.example.boardservice.module.post.domain.repository;
 
-import com.example.boardservice.module.post.web.dto.ResponsePostListDto;
+import com.example.boardservice.module.post.web.dto.response.ResponsePostListDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

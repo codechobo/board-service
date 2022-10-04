@@ -5,7 +5,7 @@ import com.example.boardservice.factory.RequestDtoFactory;
 import com.example.boardservice.module.member.domain.Member;
 import com.example.boardservice.module.member.domain.repository.MemberRepository;
 import com.example.boardservice.module.member.exception.NotMatchPasswordException;
-import com.example.boardservice.module.member.web.dto.RequestNicknameUpdateDto;
+import com.example.boardservice.module.member.web.dto.request.RequestNicknameUpdateDto;
 import com.example.boardservice.module.member.web.dto.request.RequestMemberSaveDto;
 import com.example.boardservice.module.member.web.dto.request.RequestPasswordUpdateDto;
 import com.example.boardservice.module.member.web.dto.response.ResponseMembersPageDto;

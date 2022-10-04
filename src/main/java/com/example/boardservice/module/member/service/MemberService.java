@@ -4,7 +4,7 @@ import com.example.boardservice.error.ErrorCode;
 import com.example.boardservice.module.member.domain.Member;
 import com.example.boardservice.module.member.domain.repository.MemberRepository;
 import com.example.boardservice.module.member.exception.NotMatchPasswordException;
-import com.example.boardservice.module.member.web.dto.RequestNicknameUpdateDto;
+import com.example.boardservice.module.member.web.dto.request.RequestNicknameUpdateDto;
 import com.example.boardservice.module.member.web.dto.request.RequestPasswordUpdateDto;
 import com.example.boardservice.module.member.web.dto.request.RequestMemberSaveDto;
 import com.example.boardservice.module.member.web.dto.response.ResponseMemberSaveDto;
@@ -47,7 +47,9 @@ public class MemberService {
     }
 
     private boolean isExists(RequestMemberSaveDto requestDto) {
-        return memberRepository.existsByNicknameOrPasswordOrEmail(requestDto.getNickname(), passwordEncoder.encode(requestDto.getPassword()), requestDto.getEmail());
+        return memberRepository.existsByNicknameOrPasswordOrEmail(
+                requestDto.getNickname(),
+                passwordEncoder.encode(requestDto.getPassword()), requestDto.getEmail());
     }
 
     public ResponseMemberSaveDto findMemberById(Long memberId) {

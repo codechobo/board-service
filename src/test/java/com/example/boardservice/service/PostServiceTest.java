@@ -5,9 +5,9 @@ import com.example.boardservice.module.member.domain.repository.MemberRepository
 import com.example.boardservice.module.post.domain.Post;
 import com.example.boardservice.module.post.domain.repository.PostRepository;
 import com.example.boardservice.module.post.service.PostService;
-import com.example.boardservice.module.post.web.dto.PostSaveRequestDto;
-import com.example.boardservice.module.post.web.dto.PostSaveResponseDto;
-import com.example.boardservice.module.post.web.dto.PostUpdateRequestDto;
+import com.example.boardservice.module.post.web.dto.request.RequestPostUpdateDto;
+import com.example.boardservice.module.post.web.dto.response.ResponsePostSaveDto;
+import com.example.boardservice.module.post.web.dto.request.RequestPostSaveDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -42,7 +42,7 @@ public class PostServiceTest {
         Member member = createMember();
         Post post = createPost();
 
-        PostSaveRequestDto postSaveRequestDto = PostSaveRequestDto.builder()
+        RequestPostSaveDto requestPostSaveDto = RequestPostSaveDto.builder()
                 .author(post.getAuthor())
                 .title(post.getTitle())
                 .content(post.getContent())
@@ -52,7 +52,7 @@ public class PostServiceTest {
         given(postRepository.save(any(Post.class))).willReturn(post);
 
         // when
-        PostSaveResponseDto postSaveResponseDto = postService.savePost(postSaveRequestDto);
+        ResponsePostSaveDto postSaveResponseDto = postService.savePost(requestPostSaveDto);
 
         // then
         assertThat(postSaveResponseDto.getAuthor()).isEqualTo(member.getNickname());
@@ -71,7 +71,7 @@ public class PostServiceTest {
         given(postRepository.findById(anyLong())).willReturn(Optional.of(post));
 
         // when
-        PostSaveResponseDto postSaveResponseDto = postService.findByPostId(1L);
+        ResponsePostSaveDto postSaveResponseDto = postService.findByPostId(1L);
 
         // then
         assertThat(postSaveResponseDto.getAuthor()).isEqualTo(post.getAuthor());
@@ -88,7 +88,7 @@ public class PostServiceTest {
         Post post = createPost();
         given(postRepository.findById(anyLong())).willReturn(Optional.of(post));
 
-        PostUpdateRequestDto postUpdateRequestDto = PostUpdateRequestDto.builder()
+        RequestPostUpdateDto postUpdateRequestDto = RequestPostUpdateDto.builder()
                 .title("업데이트 된 제목")
                 .content("업데이트 된 내용")
                 .build();

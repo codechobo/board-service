@@ -1,7 +1,7 @@
 package com.example.boardservice.module.post.domain.repository;
 
 import com.example.boardservice.module.post.web.dto.QResponsePostListDto;
-import com.example.boardservice.module.post.web.dto.ResponsePostListDto;
+import com.example.boardservice.module.post.web.dto.response.ResponsePostListDto;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

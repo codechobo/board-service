@@ -1,4 +1,4 @@
-package com.example.boardservice.module.post.web.dto;
+package com.example.boardservice.module.post.web.dto.request;
 
 import com.example.boardservice.module.post.domain.Post;
 import lombok.AllArgsConstructor;
@@ -14,7 +14,7 @@ import javax.validation.constraints.Size;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PostSaveRequestDto {
+public class RequestPostSaveDto {
 
     @NotEmpty
     @Size(max = 30)

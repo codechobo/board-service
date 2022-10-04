@@ -1,7 +1,7 @@
 package com.example.boardservice.module.member.web;
 
 import com.example.boardservice.module.member.service.MemberService;
-import com.example.boardservice.module.member.web.dto.RequestNicknameUpdateDto;
+import com.example.boardservice.module.member.web.dto.request.RequestNicknameUpdateDto;
 import com.example.boardservice.module.member.web.dto.request.RequestMemberSaveDto;
 import com.example.boardservice.module.member.web.dto.request.RequestPasswordUpdateDto;
 import com.example.boardservice.module.member.web.dto.response.ResponseMemberSaveDto;

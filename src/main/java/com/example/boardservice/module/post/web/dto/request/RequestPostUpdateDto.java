@@ -1,4 +1,4 @@
-package com.example.boardservice.module.post.web.dto;
+package com.example.boardservice.module.post.web.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class PostUpdateRequestDto {
+public class RequestPostUpdateDto {
 
     @NotNull
     private String title;

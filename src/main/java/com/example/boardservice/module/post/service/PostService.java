@@ -5,7 +5,12 @@ import com.example.boardservice.module.member.domain.Member;
 import com.example.boardservice.module.member.domain.repository.MemberRepository;
 import com.example.boardservice.module.post.domain.Post;
 import com.example.boardservice.module.post.domain.repository.PostRepository;
-import com.example.boardservice.module.post.web.dto.*;
+import com.example.boardservice.module.post.web.dto.request.RequestPostSaveDto;
+import com.example.boardservice.module.post.web.dto.request.RequestPostUpdateDto;
+import com.example.boardservice.module.post.web.dto.request.RequestSearchPostDto;
+import com.example.boardservice.module.post.web.dto.response.ResponsePostListDto;
+import com.example.boardservice.module.post.web.dto.response.ResponsePostPagingDto;
+import com.example.boardservice.module.post.web.dto.response.ResponsePostSaveDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,35 +27,29 @@ public class PostService {
     private final PostRepository postRepository;
     private final MemberRepository memberRepository;
 
-    public PostSaveResponseDto savePost(PostSaveRequestDto postSaveRequestDto) {
-        Member member = getMemberEntity(postSaveRequestDto);
-
-        Post post = postSaveRequestDto.toEntity();
+    public ResponsePostSaveDto savePost(RequestPostSaveDto requestDto) {
+        Member member = getMemberEntity(requestDto);
+        Post post = requestDto.toEntity();
         post.addAuthor(member.getNickname());
 
         Post savedPost = postRepository.save(post);
-        return PostSaveResponseDto.builder()
-                .post(savedPost)
-                .build();
+        return ResponsePostSaveDto.builder().post(savedPost).build();
     }
 
-    private Member getMemberEntity(PostSaveRequestDto postSaveRequestDto) {
+    private Member getMemberEntity(RequestPostSaveDto postSaveRequestDto) {
         return memberRepository.findByNickname(postSaveRequestDto.getAuthor())
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.NOT_FOUND_ENTITY.getMessage()));
     }
 
-    public PostSaveResponseDto findByPostId(Long postId) {
+    public ResponsePostSaveDto findByPostId(Long postId) {
         Post post = getPostEntity(postId);
-        return PostSaveResponseDto.builder()
-                .post(post)
-                .build();
+        return ResponsePostSaveDto.builder().post(post).build();
     }
 
     @Transactional
-    public void updateAfterFindPost(Long postId, PostUpdateRequestDto postUpdateRequestDto) {
+    public void updateAfterFindPost(Long postId, RequestPostUpdateDto requestDto) {
         Post post = getPostEntity(postId);
-        post.updateTitle(postUpdateRequestDto.getTitle());
-        post.updateContent(postUpdateRequestDto.getContent());
+        post.updatePost(requestDto.getTitle(), requestDto.getContent());
     }
 
     @Transactional
@@ -60,14 +59,14 @@ public class PostService {
     }
 
     public ResponsePostPagingDto findPosts(RequestSearchPostDto requestSearchPostDto, Pageable pageable) {
-        Page<ResponsePostListDto> responsePostListDtos = postRepository
+        Page<ResponsePostListDto> responsePostListDto = postRepository
                 .getMembersIncludingLastCreate(
                         requestSearchPostDto.getAuthor(),
                         requestSearchPostDto.getTitle(),
                         requestSearchPostDto.getContent(),
                         pageable);
 
-        return ResponsePostPagingDto.toMapper(responsePostListDtos);
+        return ResponsePostPagingDto.toMapper(responsePostListDto);
     }
 
     private Post getPostEntity(Long postId) {

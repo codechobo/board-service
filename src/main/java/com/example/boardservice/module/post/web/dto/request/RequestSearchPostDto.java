@@ -1,4 +1,4 @@
-package com.example.boardservice.module.post.web.dto;
+package com.example.boardservice.module.post.web.dto.request;
 
 import lombok.Builder;
 import lombok.Getter;

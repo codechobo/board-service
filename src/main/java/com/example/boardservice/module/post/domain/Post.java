@@ -38,12 +38,8 @@ public class Post extends TimeEntity {
         this.author = nickName;
     }
 
-    public void updateTitle(String title) {
+    public void updatePost(String title, String content) {
         this.title = title;
-    }
-
-    public void updateContent(String content) {
         this.content = content;
     }
-
 }
