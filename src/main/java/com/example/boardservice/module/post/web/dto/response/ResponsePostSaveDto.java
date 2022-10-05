@@ -14,9 +14,17 @@ public class ResponsePostSaveDto {
     private final String content; // 글 내용
 
     @Builder
-    public ResponsePostSaveDto(Post post) {
-        this.author = post.getAuthor();
-        this.title = post.getTitle();
-        this.content = post.getContent();
+    public ResponsePostSaveDto(String author, String title, String content) {
+        this.author = author;
+        this.title = title;
+        this.content = content;
+    }
+
+    public static ResponsePostSaveDto of(Post post) {
+        return ResponsePostSaveDto.builder()
+                .author(post.getAuthor())
+                .title(post.getTitle())
+                .content(post.getContent())
+                .build();
     }
 }

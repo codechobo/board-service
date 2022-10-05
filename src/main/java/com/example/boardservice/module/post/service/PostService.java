@@ -19,9 +19,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 
-@Transactional(readOnly = true)
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class PostService {
 
     private final PostRepository postRepository;
@@ -29,11 +29,17 @@ public class PostService {
 
     public ResponsePostSaveDto savePost(RequestPostSaveDto requestDto) {
         Member member = getMemberEntity(requestDto);
-        Post post = requestDto.toEntity();
-        post.addAuthor(member.getNickname());
+        Post post = createPost(requestDto, member);
+        Post savePost = postRepository.save(post);
+        return ResponsePostSaveDto.of(savePost);
+    }
 
-        Post savedPost = postRepository.save(post);
-        return ResponsePostSaveDto.builder().post(savedPost).build();
+    private  Post createPost(RequestPostSaveDto requestDto, Member member) {
+        return Post.builder()
+                .author(member.getNickname())
+                .title(requestDto.getTitle())
+                .content(requestDto.getContent())
+                .build();
     }
 
     private Member getMemberEntity(RequestPostSaveDto postSaveRequestDto) {
@@ -43,7 +49,7 @@ public class PostService {
 
     public ResponsePostSaveDto findByPostId(Long postId) {
         Post post = getPostEntity(postId);
-        return ResponsePostSaveDto.builder().post(post).build();
+        return ResponsePostSaveDto.of(post);
     }
 
     @Transactional

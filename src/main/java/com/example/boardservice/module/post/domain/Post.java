@@ -29,13 +29,10 @@ public class Post extends TimeEntity {
     private String content; // 글 내용
 
     @Builder
-    public Post(String title, String content) {
+    public Post(String author, String title, String content) {
+        this.author = author;
         this.title = title;
         this.content = content;
-    }
-
-    public void addAuthor(String nickName) {
-        this.author = nickName;
     }
 
     public void updatePost(String title, String content) {
