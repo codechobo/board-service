@@ -49,7 +49,6 @@ class CommentServiceTest {
         Member member = createMember();
 
         Post post = createPost();
-        post.addAuthor(member.getNickname());
 
         CommentSaveRequestDto commentSaveRequestDto = CommentSaveRequestDto.builder()
                 .author("까까머리")

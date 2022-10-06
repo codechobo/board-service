@@ -65,8 +65,7 @@ public class PostService {
     }
 
     public ResponsePostPagingDto findPosts(RequestSearchPostDto requestSearchPostDto, Pageable pageable) {
-        Page<ResponsePostListDto> responsePostListDto = postRepository
-                .getMembersIncludingLastCreate(
+        Page<ResponsePostListDto> responsePostListDto = postRepository.getMembersIncludingLastCreate(
                         requestSearchPostDto.getAuthor(),
                         requestSearchPostDto.getTitle(),
                         requestSearchPostDto.getContent(),
