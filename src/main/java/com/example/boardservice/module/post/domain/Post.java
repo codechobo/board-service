@@ -1,9 +1,12 @@
 package com.example.boardservice.module.post.domain;
 
 import com.example.boardservice.module.base.TimeEntity;
+import com.example.boardservice.module.comment.domain.Comment;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @EqualsAndHashCode(of = "id", callSuper = false)
 @Getter
@@ -28,6 +31,9 @@ public class Post extends TimeEntity {
     @Column(name = "CONTENT")
     private String content; // 글 내용
 
+    @OneToMany(mappedBy = "post", orphanRemoval = true, cascade = CascadeType.ALL)
+    private List<Comment> comments = new ArrayList<>();
+
     @Builder
     public Post(String author, String title, String content) {
         this.author = author;
@@ -38,5 +44,10 @@ public class Post extends TimeEntity {
     public void updatePost(String title, String content) {
         this.title = title;
         this.content = content;
+    }
+
+    public void addComment(Comment comment) {
+        this.comments.add(comment);
+        comment.addPost(this);
     }
 }

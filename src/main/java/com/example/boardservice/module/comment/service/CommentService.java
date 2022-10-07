@@ -3,7 +3,8 @@ package com.example.boardservice.module.comment.service;
 import com.example.boardservice.error.ErrorCode;
 import com.example.boardservice.module.comment.domain.Comment;
 import com.example.boardservice.module.comment.domain.repository.CommentRepository;
-import com.example.boardservice.module.comment.web.comment_model.*;
+import com.example.boardservice.module.comment.web.dto.*;
+import com.example.boardservice.module.comment.web.dto.response.ResponseCommentsCountDto;
 import com.example.boardservice.module.member.domain.Member;
 import com.example.boardservice.module.member.domain.repository.MemberRepository;
 import com.example.boardservice.module.post.domain.Post;
@@ -36,12 +37,11 @@ public class CommentService {
                 .content(commentSaveRequestDto.getContent())
                 .build();
         comment.addPost(post);
-
-        Comment saveComment = commentRepository.save(comment);
+        Comment savedComment = commentRepository.save(comment);
 
         return CommentSaveResponseDto.builder()
-                .author(saveComment.getAuthor())
-                .content(saveComment.getContent())
+                .author(savedComment.getAuthor())
+                .content(savedComment.getContent())
                 .build();
     }
 
@@ -64,12 +64,18 @@ public class CommentService {
                 .build();
     }
 
-    public CommentSaveResponseDto findCommentById(Long commentId) {
-        Comment comment = getCommentEntity(commentId);
+    @Transactional
+    public CommentSaveResponseDto findCommentById(Long postId, Long commentId) {
+        Post post = getPostEntity(postId);
+
+        Comment savedComment = post.getComments().stream()
+                .filter(comment -> comment.getId().equals(commentId))
+                .findAny()
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.NOT_FOUND_ENTITY.getMessage()));
 
         return CommentSaveResponseDto.builder()
-                .author(comment.getAuthor())
-                .content(comment.getContent())
+                .author(savedComment.getAuthor())
+                .content(savedComment.getContent())
                 .build();
     }
 
@@ -95,6 +101,13 @@ public class CommentService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
+    public ResponseCommentsCountDto findPostCommentCount(Long postId) {
+        Post post = getPostEntity(postId);
+        long commentCount = commentRepository.getPostCommentCount(post);
+        return ResponseCommentsCountDto.of(post.getTitle(), post.getAuthor(), commentCount);
+    }
+
     private Member getMemberEntity(String authorNickname) {
         return memberRepository.findByNickname(authorNickname)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.NOT_FOUND_ENTITY.getMessage()));
@@ -109,5 +122,4 @@ public class CommentService {
         return commentRepository.findById(commentId)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.NOT_FOUND_ENTITY.getMessage()));
     }
-
 }

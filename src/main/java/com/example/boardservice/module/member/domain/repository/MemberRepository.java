@@ -11,7 +11,6 @@ public interface MemberRepository extends JpaRepository<Member, Long>, MemberCus
 
     boolean existsByNicknameOrPasswordOrEmail(String nickname, String password, String email);
 
-    boolean existsByPassword(String password);
 
     boolean existsByNickname(String nickname);
 }

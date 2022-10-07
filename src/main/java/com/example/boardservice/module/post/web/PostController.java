@@ -52,5 +52,4 @@ public class PostController {
         postService.removePost(postId);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
-
 }

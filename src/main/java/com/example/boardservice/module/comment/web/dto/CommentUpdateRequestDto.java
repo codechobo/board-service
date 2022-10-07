@@ -1,4 +1,4 @@
-package com.example.boardservice.module.comment.web.comment_model;
+package com.example.boardservice.module.comment.web.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -6,11 +6,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class CommentOfCommentRequestDto {
+public class CommentUpdateRequestDto {
 
-    private String author;
     private String content;
 }
