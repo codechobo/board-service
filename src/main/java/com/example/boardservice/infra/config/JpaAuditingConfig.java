@@ -1,4 +1,4 @@
-package com.example.boardservice.config;
+package com.example.boardservice.infra.config;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.context.annotation.Bean;

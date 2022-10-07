@@ -61,7 +61,7 @@ public class CommentController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @GetMapping("/posts/{posts-id}/comments-count")
+    @GetMapping("/posts/{posts-id}/comments-count")현
     public ResponseEntity<ResponseCommentsCountDto> readCommentCount(@PathVariable("posts-id") Long postId) {
         ResponseCommentsCountDto responseCommentsCountDto = commentService.findPostCommentCount(postId);
         return ResponseEntity.status(HttpStatus.OK).body(responseCommentsCountDto);

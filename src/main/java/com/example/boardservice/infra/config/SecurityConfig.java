@@ -1,4 +1,4 @@
-package com.example.boardservice.config;
+package com.example.boardservice.infra.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
