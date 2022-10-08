@@ -79,4 +79,9 @@ public class Post extends TimeEntity {
         }
     }
 
+    public void updateViewCount() {
+        int currentCount = getViewCount();
+        currentCount += 1;
+        this.viewCount = currentCount;
+    }
 }

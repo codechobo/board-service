@@ -42,10 +42,11 @@ public class PostService {
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.NOT_FOUND_ENTITY.getMessage()));
     }
 
-    // 공개 여부에 따라 조회
+    @Transactional
     public ResponsePostSaveDto findByPostId(Long postId) {
         Post post = getPostEntity(postId);
         post.checkPublished();
+        post.updateViewCount();
         return ResponsePostSaveDto.of(post);
     }
 

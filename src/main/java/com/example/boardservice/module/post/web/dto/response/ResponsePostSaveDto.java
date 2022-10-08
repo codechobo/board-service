@@ -13,11 +13,14 @@ public class ResponsePostSaveDto {
 
     private final String content; // 글 내용
 
+    private final int viewCount; // 조회수
+
     @Builder
-    public ResponsePostSaveDto(String author, String title, String content) {
+    public ResponsePostSaveDto(String author, String title, String content, int viewCount) {
         this.author = author;
         this.title = title;
         this.content = content;
+        this.viewCount = viewCount;
     }
 
     public static ResponsePostSaveDto of(Post post) {
@@ -25,6 +28,7 @@ public class ResponsePostSaveDto {
                 .author(post.getAuthor())
                 .title(post.getTitle())
                 .content(post.getContent())
+                .viewCount(post.getViewCount())
                 .build();
     }
 }

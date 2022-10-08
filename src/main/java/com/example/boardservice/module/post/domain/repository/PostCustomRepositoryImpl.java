@@ -25,7 +25,8 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
         List<ResponsePostListDto> result = jpaQueryFactory.select(new QResponsePostListDto(
                         post.author,
                         post.title,
-                        post.content
+                        post.content,
+                        post.viewCount
                 ))
                 .from(post)
                 .where(post.author.contains(author),
