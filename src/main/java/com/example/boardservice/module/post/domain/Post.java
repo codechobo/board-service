@@ -5,6 +5,7 @@ import com.example.boardservice.module.comment.domain.Comment;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,14 +32,23 @@ public class Post extends TimeEntity {
     @Column(name = "CONTENT")
     private String content; // 글 내용
 
+    private boolean published = false; // 공개 여부
+
+    private LocalDateTime publishDateTime; // 게시글 공개 된 시간
+
+    private LocalDateTime closeDateTime; // 게시글 비공개 된 시간
+
+    private int viewCount; // 게시글 조회수
+
     @OneToMany(mappedBy = "post", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();
 
     @Builder
-    public Post(String author, String title, String content) {
+    public Post(String author, String title, String content, boolean published) {
         this.author = author;
         this.title = title;
         this.content = content;
+        this.published = published;
     }
 
     public void updatePost(String title, String content) {
@@ -46,8 +56,27 @@ public class Post extends TimeEntity {
         this.content = content;
     }
 
-    public void addComment(Comment comment) {
-        this.comments.add(comment);
-        comment.addPost(this);
+    public void publish() {
+        if (!this.published) {
+            this.published = true;
+            this.publishDateTime = LocalDateTime.now();
+        } else {
+            throw new IllegalArgumentException("해당 게시글은 이미 공개 한 상태입니다.");
+        }
     }
+
+    public void close() {
+        if (this.published) {
+            this.published = false;
+        } else {
+            throw new IllegalArgumentException("해당 게시글은 이미 비공개 한 상태입니다.");
+        }
+    }
+
+    public void checkPublished() {
+        if (!this.isPublished()) {
+            throw new IllegalArgumentException("해당 게시글은 비공개 된 상태입니다.");
+        }
+    }
+
 }

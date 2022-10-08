@@ -28,29 +28,27 @@ public class PostService {
     private final MemberRepository memberRepository;
 
     public ResponsePostSaveDto savePost(RequestPostSaveDto requestDto) {
-        Member member = getMemberEntity(requestDto);
-        Post post = createPost(requestDto, member);
+        Member member = getMemberEntity(requestDto.getAuthor());
+
+        Post post = createPost(member.getNickname(), requestDto.getTitle(), requestDto.getContent());
+        post.publish();
+
         Post savePost = postRepository.save(post);
         return ResponsePostSaveDto.of(savePost);
     }
 
-    private  Post createPost(RequestPostSaveDto requestDto, Member member) {
-        return Post.builder()
-                .author(member.getNickname())
-                .title(requestDto.getTitle())
-                .content(requestDto.getContent())
-                .build();
-    }
-
-    private Member getMemberEntity(RequestPostSaveDto postSaveRequestDto) {
-        return memberRepository.findByNickname(postSaveRequestDto.getAuthor())
+    private Member getMemberEntity(String author) {
+        return memberRepository.findByNickname(author)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.NOT_FOUND_ENTITY.getMessage()));
     }
 
+    // 공개 여부에 따라 조회
     public ResponsePostSaveDto findByPostId(Long postId) {
         Post post = getPostEntity(postId);
+        post.checkPublished();
         return ResponsePostSaveDto.of(post);
     }
+
 
     @Transactional
     public void updateAfterFindPost(Long postId, RequestPostUpdateDto requestDto) {
@@ -66,10 +64,10 @@ public class PostService {
 
     public ResponsePostPagingDto findPosts(RequestSearchPostDto requestSearchPostDto, Pageable pageable) {
         Page<ResponsePostListDto> responsePostListDto = postRepository.getMembersIncludingLastCreate(
-                        requestSearchPostDto.getAuthor(),
-                        requestSearchPostDto.getTitle(),
-                        requestSearchPostDto.getContent(),
-                        pageable);
+                requestSearchPostDto.getAuthor(),
+                requestSearchPostDto.getTitle(),
+                requestSearchPostDto.getContent(),
+                pageable);
 
         return ResponsePostPagingDto.toMapper(responsePostListDto);
     }
@@ -77,5 +75,19 @@ public class PostService {
     private Post getPostEntity(Long postId) {
         return postRepository.findById(postId)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.NOT_FOUND_ENTITY.getMessage()));
+    }
+
+    private Post createPost(String author, String title, String content) {
+        return Post.builder()
+                .author(author)
+                .title(title)
+                .content(content)
+                .build();
+    }
+
+    @Transactional
+    public void close(Long postId) {
+        Post post = getPostEntity(postId);
+        post.close();
     }
 }

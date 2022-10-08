@@ -3,8 +3,7 @@ package com.example.boardservice.error;
 import com.example.boardservice.error.response.ErrorResponseDto;
 import com.sun.jdi.request.DuplicateRequestException;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -14,9 +13,6 @@ import javax.persistence.EntityNotFoundException;
 @Slf4j
 @RestControllerAdvice
 public class BoardServiceExceptionAdvice {
-
-    @Autowired
-    private MessageSource messageSource;
 
     @ExceptionHandler(value = EntityNotFoundException.class)
     public ResponseEntity<ErrorResponseDto> entityNotFoundException(EntityNotFoundException e) {
@@ -40,5 +36,14 @@ public class BoardServiceExceptionAdvice {
 
         log.info("DuplicateRequestException : {}", e);
         return ResponseEntity.status(ErrorCode.REQUEST_DATA_DUPLICATED.getStatus()).body(errorResponseDto);
+    }
+
+    @ExceptionHandler(value = IllegalArgumentException.class)
+    public ResponseEntity<ErrorResponseDto> illegalArgumentException(IllegalArgumentException e) {
+        final ErrorResponseDto errorResponseDto = ErrorResponseDto.builder()
+                .httpStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+                .message(e.getMessage())
+                .build();
+        return ResponseEntity.internalServerError().body(errorResponseDto);
     }
 }

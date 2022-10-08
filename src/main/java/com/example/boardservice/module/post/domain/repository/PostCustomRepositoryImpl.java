@@ -1,7 +1,8 @@
 package com.example.boardservice.module.post.domain.repository;
 
-import com.example.boardservice.module.post.web.dto.QResponsePostListDto;
+import com.example.boardservice.module.post.web.dto.response.QResponsePostListDto;
 import com.example.boardservice.module.post.web.dto.response.ResponsePostListDto;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -29,12 +30,20 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
                 .from(post)
                 .where(post.author.contains(author),
                         post.title.contains(title),
-                        post.content.contains(content))
+                        post.content.contains(content),
+                        eqPostPublished(Boolean.TRUE))
                 .orderBy(post.createdAt.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
 
         return new PageImpl<>(result, pageable, result.size());
+    }
+
+    private BooleanExpression eqPostPublished(Boolean published) {
+        if (published == null) {
+            return null;
+        }
+        return post.published.eq(published);
     }
 }

@@ -15,7 +15,6 @@ public enum ErrorCode {
 
     // member
     NOT_MATCH_PASSWORD(HttpStatus.BAD_REQUEST, "Not Match Password !!");
-
     private final HttpStatus status;
     private final String message;
 

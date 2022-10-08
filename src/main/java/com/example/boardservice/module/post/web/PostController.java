@@ -27,15 +27,22 @@ public class PostController {
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
 
+    @PutMapping("/posts/{id}/close")
+    public ResponseEntity<Void> closePost(@PathVariable("id") Long postId) {
+        postService.close(postId);
+        return ResponseEntity.ok().build();
+    }
+
+
     @GetMapping("/posts/{id}")
-    public ResponseEntity<ResponsePostSaveDto> getPosts(@PathVariable("id") Long postId) {
+    public ResponseEntity<ResponsePostSaveDto> getPost(@PathVariable("id") Long postId) {
         ResponsePostSaveDto responseDto = postService.findByPostId(postId);
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
 
     @GetMapping("/posts")
     public ResponseEntity<ResponsePostPagingDto> getPostList(
-            @RequestBody(required = false) RequestSearchPostDto requestSearchPostDto,
+            @Valid @RequestBody(required = false) RequestSearchPostDto requestSearchPostDto,
             @PageableDefault(size = 5) Pageable pageable) {
         ResponsePostPagingDto responsePagingDto = postService.findPosts(requestSearchPostDto, pageable);
         return ResponseEntity.status(HttpStatus.OK).body(responsePagingDto);
@@ -44,7 +51,7 @@ public class PostController {
     @PutMapping("/posts/{id}")
     public ResponseEntity<Void> updatePost(@PathVariable("id") Long postId, @RequestBody RequestPostUpdateDto requestDto) {
         postService.updateAfterFindPost(postId, requestDto);
-        return ResponseEntity.status(HttpStatus.OK).build();
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/posts/{id}")
