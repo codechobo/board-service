@@ -31,6 +31,7 @@ public class CommentService {
     public CommentSaveResponseDto saveComment(Long postId, CommentSaveRequestDto commentSaveRequestDto) {
         Member member = getMemberEntity(commentSaveRequestDto.getAuthor());
         Post post = getPostEntity(postId);
+        post.checkPublished();
 
         Comment comment = Comment.builder()
                 .author(member.getNickname())
@@ -50,6 +51,8 @@ public class CommentService {
                                                             CommentOfCommentRequestDto commentOfCommentRequestDto) {
         Member member = getMemberEntity(commentOfCommentRequestDto.getAuthor());
         Post post = getPostEntity(postId);
+        post.checkPublished();
+
         Comment comment = getCommentEntity(commentId);
 
         Comment commentOfComment = Comment.builder()
@@ -67,6 +70,7 @@ public class CommentService {
     @Transactional
     public CommentSaveResponseDto findCommentById(Long postId, Long commentId) {
         Post post = getPostEntity(postId);
+        post.checkPublished();
 
         Comment savedComment = post.getComments().stream()
                 .filter(comment -> comment.getId().equals(commentId))
@@ -104,6 +108,7 @@ public class CommentService {
     @Transactional
     public ResponseCommentsCountDto findPostCommentCount(Long postId) {
         Post post = getPostEntity(postId);
+        post.checkPublished();
         long commentCount = commentRepository.getPostCommentCount(post);
         return ResponseCommentsCountDto.of(post.getTitle(), post.getAuthor(), commentCount);
     }
