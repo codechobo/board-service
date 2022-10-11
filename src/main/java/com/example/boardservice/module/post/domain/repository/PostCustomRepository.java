@@ -6,4 +6,5 @@ import org.springframework.data.domain.Pageable;
 
 public interface PostCustomRepository {
     Page<ResponsePostListDto> getMembersIncludingLastCreate(String author, String title, String content, Pageable pageable);
+    Page<ResponsePostListDto> getPostViewCountSort(String author, String title, String content, Pageable pageable);
 }

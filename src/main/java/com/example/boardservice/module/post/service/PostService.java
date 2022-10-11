@@ -73,6 +73,16 @@ public class PostService {
         return ResponsePostPagingDto.toMapper(responsePostListDto);
     }
 
+    public ResponsePostPagingDto findPostsFromViewCount(RequestSearchPostDto requestSearchPostDto, Pageable pageable) {
+        Page<ResponsePostListDto> responsePostListDto = postRepository.getPostViewCountSort(
+                requestSearchPostDto.getAuthor(),
+                requestSearchPostDto.getTitle(),
+                requestSearchPostDto.getContent(),
+                pageable);
+
+        return ResponsePostPagingDto.toMapper(responsePostListDto);
+    }
+
     private Post getPostEntity(Long postId) {
         return postRepository.findById(postId)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.NOT_FOUND_ENTITY.getMessage()));

@@ -41,11 +41,17 @@ public class PostController {
     }
 
     @GetMapping("/posts")
-    public ResponseEntity<ResponsePostPagingDto> getPostList(
-            @Valid @RequestBody(required = false) RequestSearchPostDto requestSearchPostDto,
-            @PageableDefault(size = 5) Pageable pageable) {
+    public ResponseEntity<ResponsePostPagingDto> getPostList(@Valid @RequestBody(required = false) RequestSearchPostDto requestSearchPostDto,
+                                                             @PageableDefault(size = 5) Pageable pageable) {
         ResponsePostPagingDto responsePagingDto = postService.findPosts(requestSearchPostDto, pageable);
         return ResponseEntity.status(HttpStatus.OK).body(responsePagingDto);
+    }
+
+    @GetMapping("/posts/view-count")
+    public ResponseEntity<ResponsePostPagingDto> getPostListFormViewCount(@Valid @RequestBody RequestSearchPostDto requestSearchPostDto,
+                                                                          @PageableDefault(size = 5) Pageable pageable) {
+        ResponsePostPagingDto postsFromViewCount = postService.findPostsFromViewCount(requestSearchPostDto, pageable);
+        return ResponseEntity.status(HttpStatus.OK).body(postsFromViewCount);
     }
 
     @PutMapping("/posts/{id}")

@@ -38,6 +38,8 @@ public class CommentService {
                 .content(commentSaveRequestDto.getContent())
                 .build();
         comment.addPost(post);
+        comment.publish();
+
         Comment savedComment = commentRepository.save(comment);
 
         return CommentSaveResponseDto.builder()
@@ -47,13 +49,13 @@ public class CommentService {
     }
 
     @Transactional
-    public CommentOfCommentResponseDto saveCommentOfComment(Long postId, Long commentId,
-                                                            CommentOfCommentRequestDto commentOfCommentRequestDto) {
+    public CommentOfCommentResponseDto saveCommentOfComment(Long postId, Long commentId, CommentOfCommentRequestDto commentOfCommentRequestDto) {
         Member member = getMemberEntity(commentOfCommentRequestDto.getAuthor());
         Post post = getPostEntity(postId);
         post.checkPublished();
 
         Comment comment = getCommentEntity(commentId);
+        comment.checkPublished();
 
         Comment commentOfComment = Comment.builder()
                 .author(member.getNickname())
@@ -84,8 +86,7 @@ public class CommentService {
     }
 
     @Transactional
-    public void updateAfterFindComment(Long commentId,
-                                       CommentUpdateRequestDto commentUpdateRequestDto) {
+    public void updateAfterFindComment(Long commentId, CommentUpdateRequestDto commentUpdateRequestDto) {
         Comment comment = getCommentEntity(commentId);
         comment.updateContent(commentUpdateRequestDto.getContent());
     }

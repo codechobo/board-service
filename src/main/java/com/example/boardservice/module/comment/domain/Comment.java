@@ -6,6 +6,7 @@ import com.example.boardservice.module.post.domain.Post;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,6 +41,12 @@ public class Comment extends TimeEntity {
             cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
     private List<Comment> child = new ArrayList<>();
 
+    @Column(name = "PUBLISHED")
+    private boolean published;
+
+    @Column(name = "PUBLISH_DATE_TIME")
+    private LocalDateTime publishDateTime;
+
     @Builder
     public Comment(String author, String content) {
         this.author = author;
@@ -62,5 +69,28 @@ public class Comment extends TimeEntity {
 
     public void updateContent(String content) {
         this.content = content;
+    }
+
+    public void publish() {
+        if (!this.published) {
+            this.published = true;
+            this.publishDateTime = LocalDateTime.now();
+        } else {
+            throw new IllegalArgumentException("해당 댓글은 이미 공개 한 상태입니다.");
+        }
+    }
+
+    public void close() {
+        if (this.published) {
+            this.published = false;
+        } else {
+            throw new IllegalArgumentException("해당 댓글은 이미 비공개 한 상태입니다.");
+        }
+    }
+
+    public void checkPublished() {
+        if (!this.isPublished()) {
+            throw new IllegalArgumentException("해당 댓글은 비공개 된 상태입니다.");
+        }
     }
 }
