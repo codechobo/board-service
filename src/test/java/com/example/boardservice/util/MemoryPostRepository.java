@@ -21,6 +21,11 @@ public class MemoryPostRepository implements PostRepository {
     }
 
     @Override
+    public Page<ResponsePostListDto> getPostViewCountSort(String author, String title, String content, Pageable pageable) {
+        return null;
+    }
+
+    @Override
     public Optional<Post> findByTitle(String title) {
         return Optional.empty();
     }

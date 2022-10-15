@@ -3,20 +3,16 @@ package com.example.boardservice.module.member.domain;
 
 import com.example.boardservice.module.base.TimeEntity;
 import com.example.boardservice.module.member.web.dto.request.RequestMemberSaveDto;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
+@EqualsAndHashCode(of = "id")
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "MEMBERS", uniqueConstraints = {
-        @UniqueConstraint(columnNames = "NICKNAME"),
-        @UniqueConstraint(columnNames = "PASSWORD"),
-        @UniqueConstraint(columnNames = "EMAIL")})
+@Table(name = "MEMBERS",
+        indexes = @Index(columnList = "nickname, email", unique = true))
 @Entity
 public class Member extends TimeEntity {
 

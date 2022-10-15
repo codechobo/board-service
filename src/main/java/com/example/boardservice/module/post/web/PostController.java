@@ -33,7 +33,6 @@ public class PostController {
         return ResponseEntity.ok().build();
     }
 
-
     @GetMapping("/posts/{id}")
     public ResponseEntity<ResponsePostSaveDto> getPost(@PathVariable("id") Long postId) {
         ResponsePostSaveDto responseDto = postService.findByPostId(postId);
@@ -47,7 +46,7 @@ public class PostController {
         return ResponseEntity.status(HttpStatus.OK).body(responsePagingDto);
     }
 
-    @GetMapping("/posts/view-count")
+    @GetMapping("/posts/hits")
     public ResponseEntity<ResponsePostPagingDto> getPostListFormViewCount(@Valid @RequestBody RequestSearchPostDto requestSearchPostDto,
                                                                           @PageableDefault(size = 5) Pageable pageable) {
         ResponsePostPagingDto postsFromViewCount = postService.findPostsFromViewCount(requestSearchPostDto, pageable);

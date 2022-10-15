@@ -1,6 +1,7 @@
 package com.example.boardservice.module.post.domain;
 
 import com.example.boardservice.module.base.TimeEntity;
+import com.example.boardservice.module.category.domain.Category;
 import com.example.boardservice.module.comment.domain.Comment;
 import lombok.*;
 
@@ -9,7 +10,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@EqualsAndHashCode(of = "id", callSuper = false)
+@EqualsAndHashCode(of = "id")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
@@ -42,6 +43,9 @@ public class Post extends TimeEntity {
 
     @OneToMany(mappedBy = "post", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "post", orphanRemoval = true, cascade = CascadeType.ALL)
+    private List<Category> categories = new ArrayList<>();
 
     @Builder
     public Post(String author, String title, String content, boolean published) {

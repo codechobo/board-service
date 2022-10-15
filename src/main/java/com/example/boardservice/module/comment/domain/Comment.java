@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@EqualsAndHashCode(of = "id", callSuper = false)
+@EqualsAndHashCode(of = "id")
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -55,6 +55,7 @@ public class Comment extends TimeEntity {
 
     public void addPost(Post post) {
         this.post = post;
+        post.getComments().add(this);
     }
 
     public void addComment(Post post, Comment comment) {

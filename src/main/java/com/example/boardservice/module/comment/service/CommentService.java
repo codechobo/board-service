@@ -64,9 +64,7 @@ public class CommentService {
         commentOfComment.addPost(post);
         comment.addComment(post, commentOfComment);
 
-        return CommentOfCommentResponseDto.builder()
-                .comment(comment)
-                .build();
+        return CommentOfCommentResponseDto.of(commentOfComment);
     }
 
     @Transactional
