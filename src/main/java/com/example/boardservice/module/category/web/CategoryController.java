@@ -20,6 +20,9 @@ public class CategoryController {
     private final CategoryService categoryService;
     private final CategoryRepository categoryRepository;
 
+    // TODO 게시글에도 카테고리 추가 기능이 되야함
+    //  연관관계 생각
+
     @PostMapping("/categories")
     public ResponseEntity<ResponseCategorySaveDto> createCategory(@Valid @NotBlank @RequestParam(name = "category_name") String requestCategoryName) {
         ResponseCategorySaveDto responseCategorySaveDto = categoryService.saveCategory(requestCategoryName);
