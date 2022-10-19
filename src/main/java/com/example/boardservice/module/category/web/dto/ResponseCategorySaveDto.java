@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,10 +23,14 @@ public class ResponseCategorySaveDto {
     private ResponseCategorySaveDto(Category category) {
         this.createAt = category.getCreatedAt();
         this.responsePostSaveDtoList = category.getPosts().stream()
-                .map(ResponsePostSaveDto::of).collect(Collectors.toList());
+                .map(ResponsePostSaveDto::of)
+                .sorted(Comparator.comparing(ResponsePostSaveDto::getTitle))
+                .collect(Collectors.toList());
         this.categoryName = category.getCategoryName();
         this.responseCategorySaveDtoList = category.getChildCategories().stream()
-                .map(ResponseCategorySaveDto::of).collect(Collectors.toList());
+                .map(ResponseCategorySaveDto::of)
+                .sorted(Comparator.comparing(ResponseCategorySaveDto::getCategoryName))
+                .collect(Collectors.toList());
     }
 
     public static ResponseCategorySaveDto of(Category category) {
