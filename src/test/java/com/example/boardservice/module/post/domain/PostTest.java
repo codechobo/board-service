@@ -51,7 +51,6 @@ class PostTest {
         Category category = Category.builder().categoryName("Spring").build();
         Category category2 = Category.builder().categoryName("Boot").build();
         category.addChildCategories(category2);
-        category.addPost(post);
         categoryRepository.save(category);
         categoryRepository.save(category2);
 

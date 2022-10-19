@@ -1,5 +1,6 @@
 package com.example.boardservice.module.post.domain;
 
+import com.example.boardservice.error.ErrorCode;
 import com.example.boardservice.module.base.TimeEntity;
 import com.example.boardservice.module.category.domain.Category;
 import com.example.boardservice.module.comment.domain.Comment;
@@ -44,8 +45,8 @@ public class Post extends TimeEntity {
     @OneToMany(mappedBy = "post", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();
 
-    @OneToMany(mappedBy = "post", orphanRemoval = true, cascade = CascadeType.ALL)
-    private List<Category> categories = new ArrayList<>();
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    private Category category;
 
     @Builder
     public Post(String author, String title, String content, boolean published) {
@@ -53,6 +54,13 @@ public class Post extends TimeEntity {
         this.title = title;
         this.content = content;
         this.published = published;
+    }
+
+    public void addCategory(Category category) {
+        if (category == null) {
+            throw new EntityNotFoundException(ErrorCode.NOT_FOUND_ENTITY.getMessage());
+        }
+        this.category = category;
     }
 
     public void updatePost(String title, String content) {
