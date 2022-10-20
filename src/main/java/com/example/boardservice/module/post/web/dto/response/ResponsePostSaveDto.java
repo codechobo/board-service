@@ -1,6 +1,5 @@
 package com.example.boardservice.module.post.web.dto.response;
 
-import com.example.boardservice.module.category.domain.Category;
 import com.example.boardservice.module.post.domain.Post;
 import lombok.Builder;
 import lombok.Getter;

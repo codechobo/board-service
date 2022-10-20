@@ -30,9 +30,9 @@ public class CategoryController {
         return ResponseEntity.status(HttpStatus.CREATED).body(responseCategorySaveDto);
     }
 
-    @GetMapping("/categories")
-    public ResponseEntity<ResponseCategorySaveDto> getList() {
-        ResponseCategorySaveDto responseCategorySaveDto = categoryService.getList();
+    @GetMapping("/categories/{id}")
+    public ResponseEntity<ResponseCategorySaveDto> getCategories(@PathVariable("id") Long categoryId) {
+        ResponseCategorySaveDto responseCategorySaveDto = categoryService.findCategoryById(categoryId);
         return ResponseEntity.ok(responseCategorySaveDto);
     }
 

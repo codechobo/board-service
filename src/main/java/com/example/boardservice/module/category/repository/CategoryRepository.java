@@ -11,7 +11,6 @@ import java.util.Optional;
 public interface CategoryRepository extends JpaRepository<Category, Long> {
     boolean existsByCategoryName(String categoryName);
 
-    @Override
     @EntityGraph(attributePaths = {"parent", "posts"})
     Optional<Category> findById(Long categoryId);
 }
