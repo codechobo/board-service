@@ -1,5 +1,6 @@
 package com.example.boardservice.module.post.web;
 
+import com.example.boardservice.module.category.service.CategoryService;
 import com.example.boardservice.module.post.service.PostService;
 import com.example.boardservice.module.post.web.dto.request.RequestPostSaveDto;
 import com.example.boardservice.module.post.web.dto.request.RequestPostUpdateDto;
@@ -20,10 +21,12 @@ import javax.validation.Valid;
 public class PostController {
 
     private final PostService postService;
+    private final CategoryService categoryService;
 
     @PostMapping("/posts")
-    public ResponseEntity<ResponsePostSaveDto> createPost(@Valid @RequestBody RequestPostSaveDto requestDto) {
-        ResponsePostSaveDto responseDto = postService.savePost(requestDto);
+    public ResponseEntity<ResponsePostSaveDto> createPost(@PathVariable(value = "category-id", required = false) Long categoryId,
+                                                          @Valid @RequestBody RequestPostSaveDto requestDto) {
+        ResponsePostSaveDto responseDto = postService.savePost(requestDto, categoryId);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
 

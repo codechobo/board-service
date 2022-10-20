@@ -6,7 +6,6 @@ import com.example.boardservice.module.category.repository.CategoryRepository;
 import com.example.boardservice.module.category.web.dto.request.RequestCategoryUpdateDto;
 import com.example.boardservice.module.category.web.dto.response.ResponseCategorySaveDto;
 import com.example.boardservice.module.category.web.dto.response.ResponseCategoryUpdateDto;
-import com.example.boardservice.module.post.domain.repository.PostRepository;
 import com.sun.jdi.request.DuplicateRequestException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +21,6 @@ import javax.persistence.EntityNotFoundException;
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;
-    private final PostRepository postRepository;
 
     @Transactional
     public ResponseCategorySaveDto saveCategory(String requestCategoryName) {
@@ -73,7 +71,7 @@ public class CategoryService {
         return ResponseCategoryUpdateDto.of(category);
     }
 
-    private Category getCategory(Long categoryId) {
+    public Category getCategory(Long categoryId) {
         return categoryRepository.findCategoryWithParentAndPostsById(categoryId)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.NOT_FOUND_ENTITY.getMessage()));
     }

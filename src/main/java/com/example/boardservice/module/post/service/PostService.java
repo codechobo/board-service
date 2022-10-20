@@ -1,6 +1,7 @@
 package com.example.boardservice.module.post.service;
 
 import com.example.boardservice.error.ErrorCode;
+import com.example.boardservice.module.category.repository.CategoryRepository;
 import com.example.boardservice.module.member.domain.Member;
 import com.example.boardservice.module.member.domain.repository.MemberRepository;
 import com.example.boardservice.module.post.domain.Post;
@@ -26,16 +27,21 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final MemberRepository memberRepository;
+    private final CategoryRepository categoryRepository;
 
-    public ResponsePostSaveDto savePost(RequestPostSaveDto requestDto) {
+    @Transactional
+    public ResponsePostSaveDto savePost(RequestPostSaveDto requestDto, Long categoryId) {
         Member member = getMemberEntity(requestDto.getAuthor());
 
         Post post = createPost(member.getNickname(), requestDto.getTitle(), requestDto.getContent());
         post.publish();
 
+        categoryRepository.findById(categoryId).ifPresent(post::addCategory);
         Post savePost = postRepository.save(post);
         return ResponsePostSaveDto.of(savePost);
     }
+
+
 
     private Member getMemberEntity(String author) {
         return memberRepository.findByNickname(author)

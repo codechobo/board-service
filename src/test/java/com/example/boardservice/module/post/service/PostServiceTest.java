@@ -55,9 +55,10 @@ class PostServiceTest {
         Member member = memberRepository.save(requestMemberSaveDto.toEntity());
 
         RequestPostSaveDto requestDto = RequestDtoFactory.createPostSaveRequestDto(member.getNickname());
+        Long categoryId = 1L;
 
         // when
-        ResponsePostSaveDto responseDto = postService.savePost(requestDto);
+        ResponsePostSaveDto responseDto = postService.savePost(requestDto, categoryId);
 
         // then
         assertEquals(requestDto.getAuthor(), responseDto.getAuthor());
@@ -73,9 +74,10 @@ class PostServiceTest {
         memberRepository.save(requestMemberSaveDto.toEntity());
 
         RequestPostSaveDto requestDto = RequestDtoFactory.createPostSaveRequestDto("다른 닉네임");
+        Long categoryId = 1L;
 
         // when && then
-        assertThatThrownBy(() -> postService.savePost(requestDto))
+        assertThatThrownBy(() -> postService.savePost(requestDto, categoryId))
                 .isInstanceOf(EntityNotFoundException.class)
                 .hasMessage(ErrorCode.NOT_FOUND_ENTITY.getMessage());
     }
