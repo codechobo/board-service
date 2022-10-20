@@ -1,7 +1,5 @@
 package com.example.boardservice.module.category.web;
 
-import com.example.boardservice.module.category.domain.Category;
-import com.example.boardservice.module.category.repository.CategoryRepository;
 import com.example.boardservice.module.category.service.CategoryService;
 import com.example.boardservice.module.category.web.dto.ResponseCategorySaveDto;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +16,6 @@ import javax.validation.constraints.NotNull;
 public class CategoryController {
 
     private final CategoryService categoryService;
-    private final CategoryRepository categoryRepository;
 
     @PostMapping("/categories")
     public ResponseEntity<ResponseCategorySaveDto> createCategory(@Valid @NotBlank @RequestParam(name = "category_name") String requestCategoryName) {
@@ -35,8 +32,8 @@ public class CategoryController {
 
     @GetMapping("/categories")
     public ResponseEntity<ResponseCategorySaveDto> getList() {
-        Category category = categoryRepository.findById(1L).orElseThrow();
-        return ResponseEntity.ok(ResponseCategorySaveDto.of(category));
+        ResponseCategorySaveDto responseCategorySaveDto = categoryService.getList();
+        return ResponseEntity.ok(responseCategorySaveDto);
     }
 
 }

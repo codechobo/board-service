@@ -8,6 +8,18 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@NamedEntityGraph(
+        name = "category-entity-graph-with-post",
+        attributeNodes = {
+                @NamedAttributeNode("parent"),
+                @NamedAttributeNode(value = "posts", subgraph = "post-entity-graph")}
+        , subgraphs = {
+                @NamedSubgraph(
+                        name = "post-entity-graph",
+                        attributeNodes = {
+                                @NamedAttributeNode("category")
+                        }
+                )})
 @Entity
 @Getter
 @AllArgsConstructor

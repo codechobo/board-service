@@ -6,11 +6,13 @@ import com.example.boardservice.module.category.repository.CategoryRepository;
 import com.example.boardservice.module.category.web.dto.ResponseCategorySaveDto;
 import com.sun.jdi.request.DuplicateRequestException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 
+@Slf4j
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -58,5 +60,11 @@ public class CategoryService {
     private Category getCategory(Long categoryId) {
         return categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.NOT_FOUND_ENTITY.getMessage()));
+    }
+
+    @Transactional
+    public ResponseCategorySaveDto getList() {
+        Category category = categoryRepository.findById(1L).orElseThrow();
+        return ResponseCategorySaveDto.of(category);
     }
 }

@@ -6,7 +6,6 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,22 +19,26 @@ public class ResponseCategorySaveDto {
     private final List<ResponseCategorySaveDto> responseCategorySaveDtoList;
 
     @Builder
-    private ResponseCategorySaveDto(Category category) {
-        this.createAt = category.getCreatedAt();
-        this.responsePostSaveDtoList = category.getPosts().stream()
-                .map(ResponsePostSaveDto::of)
-                .sorted(Comparator.comparing(ResponsePostSaveDto::getTitle))
-                .collect(Collectors.toList());
-        this.categoryName = category.getCategoryName();
-        this.responseCategorySaveDtoList = category.getChildCategories().stream()
-                .map(ResponseCategorySaveDto::of)
-                .sorted(Comparator.comparing(ResponseCategorySaveDto::getCategoryName))
-                .collect(Collectors.toList());
+    private ResponseCategorySaveDto(LocalDateTime createAt,
+                                    String categoryName,
+                                    List<ResponsePostSaveDto> responsePostSaveDtoList,
+                                    List<ResponseCategorySaveDto> responseCategorySaveDtoList) {
+        this.createAt = createAt;
+        this.categoryName = categoryName;
+        this.responsePostSaveDtoList = responsePostSaveDtoList;
+        this.responseCategorySaveDtoList = responseCategorySaveDtoList;
     }
 
     public static ResponseCategorySaveDto of(Category category) {
         return ResponseCategorySaveDto.builder()
-                .category(category)
+                .createAt(category.getCreatedAt())
+                .categoryName(category.getCategoryName())
+                .responsePostSaveDtoList(category.getPosts().stream()
+                        .map(ResponsePostSaveDto::of)
+                        .collect(Collectors.toList()))
+                .responseCategorySaveDtoList(category.getChildCategories().stream()
+                        .map(ResponseCategorySaveDto::of)
+                        .collect(Collectors.toList()))
                 .build();
     }
 }

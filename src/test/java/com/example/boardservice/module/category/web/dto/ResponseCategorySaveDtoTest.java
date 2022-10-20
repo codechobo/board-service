@@ -32,10 +32,6 @@ class ResponseCategorySaveDtoTest {
         category.addChildCategories(categoryOfCategory1);
         categoryOfCategory1.addChildCategories(categoryOfCategory2);
 
-        ResponseCategorySaveDto responseCategorySaveDto = ResponseCategorySaveDto.of(category);
-
-        String result  = objectMapper.writeValueAsString(responseCategorySaveDto);
-        System.out.println(result);
 
 
 
