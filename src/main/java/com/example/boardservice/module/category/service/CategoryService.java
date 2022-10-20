@@ -3,7 +3,9 @@ package com.example.boardservice.module.category.service;
 import com.example.boardservice.error.ErrorCode;
 import com.example.boardservice.module.category.domain.Category;
 import com.example.boardservice.module.category.repository.CategoryRepository;
+import com.example.boardservice.module.category.web.dto.request.RequestCategoryUpdateDto;
 import com.example.boardservice.module.category.web.dto.response.ResponseCategorySaveDto;
+import com.example.boardservice.module.category.web.dto.response.ResponseCategoryUpdateDto;
 import com.example.boardservice.module.post.domain.repository.PostRepository;
 import com.sun.jdi.request.DuplicateRequestException;
 import lombok.RequiredArgsConstructor;
@@ -15,8 +17,8 @@ import javax.persistence.EntityNotFoundException;
 
 @Slf4j
 @Service
-@Transactional(readOnly = true)
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;
@@ -62,6 +64,13 @@ public class CategoryService {
     public ResponseCategorySaveDto findCategoryById(Long categoryId) {
         Category category = getCategory(categoryId);
         return ResponseCategorySaveDto.of(category);
+    }
+
+    @Transactional
+    public ResponseCategoryUpdateDto updateCategory(Long categoryId, RequestCategoryUpdateDto requestCategoryUpdateDto) {
+        Category category = getCategory(categoryId);
+        category.updateCategoryName(requestCategoryUpdateDto.getCategoryName());
+        return ResponseCategoryUpdateDto.of(category);
     }
 
     private Category getCategory(Long categoryId) {

@@ -63,4 +63,7 @@ public class Category extends TimeEntity {
         category.addParentCategory(this);
     }
 
+    public void updateCategoryName(String categoryName) {
+        this.categoryName = categoryName;
+    }
 }

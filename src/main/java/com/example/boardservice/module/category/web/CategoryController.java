@@ -1,6 +1,8 @@
 package com.example.boardservice.module.category.web;
 
 import com.example.boardservice.module.category.service.CategoryService;
+import com.example.boardservice.module.category.web.dto.request.RequestCategoryUpdateDto;
+import com.example.boardservice.module.category.web.dto.response.ResponseCategoryUpdateDto;
 import com.example.boardservice.module.category.web.dto.response.ResponseCategorySaveDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -34,6 +36,13 @@ public class CategoryController {
     public ResponseEntity<ResponseCategorySaveDto> getCategories(@PathVariable("id") Long categoryId) {
         ResponseCategorySaveDto responseCategorySaveDto = categoryService.findCategoryById(categoryId);
         return ResponseEntity.ok(responseCategorySaveDto);
+    }
+
+    @PutMapping("/categoreis/{id}")
+    public ResponseEntity<ResponseCategoryUpdateDto> updateCategory(@PathVariable("id") Long categoryId,
+                                                                    @Valid @RequestBody RequestCategoryUpdateDto requestCategoryUpdateDto) {
+        ResponseCategoryUpdateDto responseCategoryUpdateDto = categoryService.updateCategory(categoryId, requestCategoryUpdateDto);
+        return ResponseEntity.ok(responseCategoryUpdateDto);
     }
 
 }
