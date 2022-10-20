@@ -77,4 +77,10 @@ public class CategoryService {
         return categoryRepository.findCategoryWithParentAndPostsById(categoryId)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.NOT_FOUND_ENTITY.getMessage()));
     }
+
+    @Transactional
+    public void deleteCategory(Long categoryId) {
+        Category category = getCategory(categoryId);
+        categoryRepository.delete(category);
+    }
 }
