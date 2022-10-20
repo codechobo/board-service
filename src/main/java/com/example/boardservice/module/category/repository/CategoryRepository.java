@@ -11,6 +11,6 @@ import java.util.Optional;
 public interface CategoryRepository extends JpaRepository<Category, Long> {
     boolean existsByCategoryName(String categoryName);
 
-    @EntityGraph(attributePaths = {"parent", "posts"})
-    Optional<Category> findById(Long categoryId);
+    @EntityGraph(value = "category-entity-graph-with-post", type = EntityGraph.EntityGraphType.LOAD)
+    Optional<Category> findCategoryWithParentAndPostsById(Long categoryId);
 }

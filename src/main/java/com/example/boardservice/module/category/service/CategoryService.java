@@ -65,7 +65,7 @@ public class CategoryService {
     }
 
     private Category getCategory(Long categoryId) {
-        return categoryRepository.findById(categoryId)
+        return categoryRepository.findCategoryWithParentAndPostsById(categoryId)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.NOT_FOUND_ENTITY.getMessage()));
     }
 }

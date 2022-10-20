@@ -37,6 +37,7 @@ public class Category extends TimeEntity {
     private String categoryName;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "PARENT_CATEGORIES_ID")
     private Category parent;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "parent", orphanRemoval = true, cascade = CascadeType.ALL)
