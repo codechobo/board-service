@@ -1,7 +1,11 @@
 package com.example.boardservice.module.comment.web;
 
 import com.example.boardservice.module.comment.service.CommentService;
-import com.example.boardservice.module.comment.web.dto.*;
+import com.example.boardservice.module.comment.web.dto.request.CommentOfCommentRequestDto;
+import com.example.boardservice.module.comment.web.dto.request.CommentSaveRequestDto;
+import com.example.boardservice.module.comment.web.dto.request.CommentUpdateRequestDto;
+import com.example.boardservice.module.comment.web.dto.response.CommentOfCommentResponseDto;
+import com.example.boardservice.module.comment.web.dto.response.CommentSaveResponseDto;
 import com.example.boardservice.module.comment.web.dto.response.ResponseCommentsCountDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

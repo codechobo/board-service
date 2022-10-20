@@ -1,10 +1,10 @@
 package com.example.boardservice.module.like.web;
 
 import com.example.boardservice.module.like.service.LikeService;
-import com.example.boardservice.module.like.web.model.like_model.CommentLikeRequestDto;
-import com.example.boardservice.module.like.web.model.like_model.CommentLikeResponseDto;
-import com.example.boardservice.module.like.web.model.like_model.PostLikeRequestDto;
-import com.example.boardservice.module.like.web.model.like_model.PostsLikeResponseDto;
+import com.example.boardservice.module.like.web.dto.request.CommentLikeRequestDto;
+import com.example.boardservice.module.like.web.dto.response.CommentLikeResponseDto;
+import com.example.boardservice.module.like.web.dto.request.PostLikeRequestDto;
+import com.example.boardservice.module.like.web.dto.response.PostsLikeResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

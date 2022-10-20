@@ -3,7 +3,7 @@ package com.example.boardservice.module.category.service;
 import com.example.boardservice.error.ErrorCode;
 import com.example.boardservice.module.category.domain.Category;
 import com.example.boardservice.module.category.repository.CategoryRepository;
-import com.example.boardservice.module.category.web.dto.ResponseCategorySaveDto;
+import com.example.boardservice.module.category.web.dto.response.ResponseCategorySaveDto;
 import com.example.boardservice.module.post.domain.repository.PostRepository;
 import com.sun.jdi.request.DuplicateRequestException;
 import lombok.RequiredArgsConstructor;

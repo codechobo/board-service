@@ -1,4 +1,4 @@
-package com.example.boardservice.module.comment.web.dto;
+package com.example.boardservice.module.comment.web.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

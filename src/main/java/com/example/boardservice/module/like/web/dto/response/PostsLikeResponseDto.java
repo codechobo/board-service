@@ -1,4 +1,4 @@
-package com.example.boardservice.module.like.web.model.like_model;
+package com.example.boardservice.module.like.web.dto.response;
 
 import com.example.boardservice.module.like.domain.Like;
 import lombok.Builder;

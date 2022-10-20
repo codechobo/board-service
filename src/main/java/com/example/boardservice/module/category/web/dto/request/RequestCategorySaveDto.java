@@ -1,4 +1,4 @@
-package com.example.boardservice.module.category.web.dto;
+package com.example.boardservice.module.category.web.dto.request;
 
 import com.example.boardservice.module.category.domain.Category;
 import lombok.AllArgsConstructor;

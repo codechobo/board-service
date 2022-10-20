@@ -1,7 +1,7 @@
 package com.example.boardservice.module.category.web;
 
 import com.example.boardservice.module.category.service.CategoryService;
-import com.example.boardservice.module.category.web.dto.ResponseCategorySaveDto;
+import com.example.boardservice.module.category.web.dto.response.ResponseCategorySaveDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

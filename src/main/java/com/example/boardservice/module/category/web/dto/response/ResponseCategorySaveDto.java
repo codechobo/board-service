@@ -1,4 +1,4 @@
-package com.example.boardservice.module.category.web.dto;
+package com.example.boardservice.module.category.web.dto.response;
 
 import com.example.boardservice.module.category.domain.Category;
 import com.example.boardservice.module.post.web.dto.response.ResponsePostSaveDto;
