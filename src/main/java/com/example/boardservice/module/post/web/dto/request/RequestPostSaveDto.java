@@ -1,12 +1,10 @@
 package com.example.boardservice.module.post.web.dto.request;
 
 import com.example.boardservice.module.post.domain.Post;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 
@@ -15,6 +13,9 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RequestPostSaveDto {
+
+    @NotNull
+    private Long categoryId; // 카테고리 아이디
 
     @NotEmpty
     @Size(max = 30)

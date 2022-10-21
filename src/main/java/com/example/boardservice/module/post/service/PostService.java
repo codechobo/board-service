@@ -30,17 +30,19 @@ public class PostService {
     private final CategoryRepository categoryRepository;
 
     @Transactional
-    public ResponsePostSaveDto savePost(RequestPostSaveDto requestDto, Long categoryId) {
+    public ResponsePostSaveDto savePost(RequestPostSaveDto requestDto) {
         Member member = getMemberEntity(requestDto.getAuthor());
 
         Post post = createPost(member.getNickname(), requestDto.getTitle(), requestDto.getContent());
         post.publish();
-
-        categoryRepository.findById(categoryId).ifPresent(post::addCategory);
+        addCategory(requestDto, post);
         Post savePost = postRepository.save(post);
         return ResponsePostSaveDto.of(savePost);
     }
 
+    private void addCategory(RequestPostSaveDto requestDto, Post post) {
+        categoryRepository.findById(requestDto.getCategoryId()).ifPresent(post::addCategory);
+    }
 
 
     private Member getMemberEntity(String author) {

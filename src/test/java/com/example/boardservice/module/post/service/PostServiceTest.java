@@ -58,7 +58,7 @@ class PostServiceTest {
         Long categoryId = 1L;
 
         // when
-        ResponsePostSaveDto responseDto = postService.savePost(requestDto, categoryId);
+        ResponsePostSaveDto responseDto = postService.savePost(requestDto);
 
         // then
         assertEquals(requestDto.getAuthor(), responseDto.getAuthor());
@@ -77,7 +77,7 @@ class PostServiceTest {
         Long categoryId = 1L;
 
         // when && then
-        assertThatThrownBy(() -> postService.savePost(requestDto, categoryId))
+        assertThatThrownBy(() -> postService.savePost(requestDto))
                 .isInstanceOf(EntityNotFoundException.class)
                 .hasMessage(ErrorCode.NOT_FOUND_ENTITY.getMessage());
     }
