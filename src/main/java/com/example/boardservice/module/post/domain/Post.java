@@ -44,6 +44,7 @@ public class Post extends TimeEntity {
 
     private LocalDateTime closeDateTime; // 게시글 비공개 된 시간
 
+    @Column(name = "VIEW_COUNT")
     private int viewCount; // 게시글 조회수
 
     @OneToMany(mappedBy = "post",fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)

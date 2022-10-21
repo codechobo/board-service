@@ -12,9 +12,13 @@ import java.util.List;
 public class ResponsePostPagingDto {
 
     private List<ResponsePostListDto> elements;
+
     private int elementsSize;
+
     private int currentPage;
+
     private int totalPage;
+
     private int pageSize;
 
     @Builder

@@ -1,7 +1,6 @@
 package com.example.boardservice.module.member.web.dto.request;
 
 import com.example.boardservice.module.member.domain.Member;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,22 +15,18 @@ public class RequestMemberSaveDto {
 
     @Size(min = 1, max = 50)
     @NotBlank
-    @JsonProperty("name")
     private String name;
 
     @Size(min = 1, max = 50)
     @NotBlank
-    @JsonProperty("nickname")
     private String nickname;
 
     @Email
     @NotBlank
-    @JsonProperty("email")
     private String email;
 
     @Size(min = 1, max = 50)
     @NotBlank
-    @JsonProperty("password")
     private String password;
 
     @Builder

@@ -12,6 +12,7 @@ public class ResponsePostListDto {
     private String author;
     private String title;
     private String content;
+
     private int viewCount;
 
     @Builder

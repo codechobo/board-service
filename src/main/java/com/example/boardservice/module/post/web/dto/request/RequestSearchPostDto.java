@@ -4,19 +4,19 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotEmpty;
 
 @Getter
 @NoArgsConstructor
 public class RequestSearchPostDto {
 
-    @NotNull
+    @NotEmpty
     private String author;
 
-    @NotNull
+    @NotEmpty
     private String title;
 
-    @NotNull
+    @NotEmpty
     private String content;
 
     @Builder

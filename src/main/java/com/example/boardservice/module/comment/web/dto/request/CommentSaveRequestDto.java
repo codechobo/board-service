@@ -1,12 +1,11 @@
 package com.example.boardservice.module.comment.web.dto.request;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotEmpty;
 
 @Getter
 @Builder
@@ -14,12 +13,10 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 public class CommentSaveRequestDto {
 
-    @NotNull
-    @JsonProperty("author")
+    @NotEmpty
     private String author;
 
-    @NotNull
-    @JsonProperty("content")
+    @NotEmpty
     private String content;
 
 }

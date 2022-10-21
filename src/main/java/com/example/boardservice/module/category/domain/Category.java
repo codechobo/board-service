@@ -17,9 +17,7 @@ import java.util.List;
                 @NamedSubgraph(
                         name = "post-entity-graph",
                         attributeNodes = {
-                                @NamedAttributeNode("category")
-                        }
-                )})
+                                @NamedAttributeNode("category")})})
 @Entity
 @Getter
 @AllArgsConstructor
