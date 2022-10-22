@@ -53,6 +53,9 @@ public class Post extends TimeEntity {
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Category category;
 
+    @Column(name = "LIKES")
+    private long likes;
+
     @Builder
     public Post(String author, String title, String content, boolean published) {
         this.author = author;
@@ -100,5 +103,9 @@ public class Post extends TimeEntity {
         int currentCount = getViewCount();
         currentCount += 1;
         this.viewCount = currentCount;
+    }
+
+    public void updateLikes(long likes) {
+        this.likes = likes;
     }
 }

@@ -1,18 +1,18 @@
 package com.example.boardservice.module.like.service;
 
+import com.example.boardservice.error.ErrorCode;
 import com.example.boardservice.module.comment.domain.Comment;
 import com.example.boardservice.module.comment.domain.repository.CommentRepository;
 import com.example.boardservice.module.like.domain.Like;
-import com.example.boardservice.module.member.domain.Member;
 import com.example.boardservice.module.like.domain.repository.LikeRepository;
 import com.example.boardservice.module.like.web.dto.request.CommentLikeRequestDto;
 import com.example.boardservice.module.like.web.dto.request.PostLikeRequestDto;
+import com.example.boardservice.module.like.web.dto.response.CommentLikeResponseDto;
 import com.example.boardservice.module.like.web.dto.response.PostsLikeResponseDto;
+import com.example.boardservice.module.member.domain.Member;
 import com.example.boardservice.module.member.domain.repository.MemberRepository;
 import com.example.boardservice.module.post.domain.Post;
 import com.example.boardservice.module.post.domain.repository.PostRepository;
-import com.example.boardservice.error.ErrorCode;
-import com.example.boardservice.module.like.web.dto.response.CommentLikeResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +28,7 @@ public class LikeService {
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
 
+    @Transactional
     public PostsLikeResponseDto savePostLike(PostLikeRequestDto postLikeRequestDto) {
         Member member = getMember(postLikeRequestDto.getMemberId());
         Post post = getPost(postLikeRequestDto);
@@ -37,8 +38,19 @@ public class LikeService {
                 .postsId(post.getId())
                 .build();
 
+        isExistsLikePushPost(post);
         likeRepository.save(like);
         return PostsLikeResponseDto.builder().like(like).build();
+    }
+
+    private void isExistsLikePushPost(Post post) {
+        if (isExistsPost(post)) {
+            throw new IllegalArgumentException("게시글에 좋아요를 한번만 누를 수 있습니다.");
+        }
+    }
+
+    private boolean isExistsPost(Post post) {
+        return likeRepository.existsByPostsId(post.getId());
     }
 
     public CommentLikeResponseDto saveCommentLike(CommentLikeRequestDto commentLikeRequestDto) {
@@ -49,8 +61,20 @@ public class LikeService {
                 .membersId(member.getId())
                 .commentsId(comment.getId())
                 .build();
+
+        isExistsLikeComment(comment);
         likeRepository.save(like);
         return CommentLikeResponseDto.builder().like(like).build();
+    }
+
+    private void isExistsLikeComment(Comment comment) {
+        if (isExistsComment(comment)) {
+            throw new IllegalArgumentException("댓글에 좋아요를 한번만 누를 수 있습니다.");
+        }
+    }
+
+    private boolean isExistsComment(Comment comment) {
+        return likeRepository.existsByCommentsId(comment.getId());
     }
 
     @Transactional

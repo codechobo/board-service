@@ -2,6 +2,7 @@ package com.example.boardservice.module.post.service;
 
 import com.example.boardservice.error.ErrorCode;
 import com.example.boardservice.module.category.repository.CategoryRepository;
+import com.example.boardservice.module.like.domain.repository.LikeRepository;
 import com.example.boardservice.module.member.domain.Member;
 import com.example.boardservice.module.member.domain.repository.MemberRepository;
 import com.example.boardservice.module.post.domain.Post;
@@ -28,6 +29,7 @@ public class PostService {
     private final PostRepository postRepository;
     private final MemberRepository memberRepository;
     private final CategoryRepository categoryRepository;
+    private final LikeRepository likeRepository;
 
     @Transactional
     public ResponsePostSaveDto savePost(RequestPostSaveDto requestDto) {
@@ -55,7 +57,14 @@ public class PostService {
         Post post = getPostEntity(postId);
         post.checkPublished();
         post.updateViewCount();
+
+        long hits = getPostLikes(post);
+        post.updateLikes(hits);
         return ResponsePostSaveDto.of(post);
+    }
+
+    private long getPostLikes(Post post) {
+        return likeRepository.countByPostsId(post.getId());
     }
 
 

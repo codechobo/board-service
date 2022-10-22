@@ -7,10 +7,11 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+
 @Getter
-@NoArgsConstructor
 @Entity
 @Table(name = "LIKES")
+@NoArgsConstructor
 public class Like extends TimeEntity {
 
     @Id

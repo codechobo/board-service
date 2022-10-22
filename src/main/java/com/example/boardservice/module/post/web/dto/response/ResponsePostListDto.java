@@ -5,19 +5,22 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Getter
 @NoArgsConstructor
 public class ResponsePostListDto {
 
+    private LocalDateTime writeDateTime;
     private String author;
     private String title;
     private String content;
-
     private int viewCount;
 
     @Builder
     @QueryProjection
-    public ResponsePostListDto(String author, String title, String content, int viewCount) {
+    public ResponsePostListDto(LocalDateTime writeDateTime, String author, String title, String content, int viewCount) {
+        this.writeDateTime = writeDateTime;
         this.author = author;
         this.title = title;
         this.content = content;

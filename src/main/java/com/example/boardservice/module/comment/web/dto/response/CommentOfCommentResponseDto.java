@@ -21,7 +21,7 @@ public class CommentOfCommentResponseDto {
         this.writeDateTime = comment.getCreatedAt();
         this.author = comment.getAuthor();
         this.content = comment.getContent();
-        this.comments = comment.getChild().stream().map(c -> CommentOfCommentResponseDto.builder().comment(c).build())
+        this.comments = comment.getChild().stream().map(CommentOfCommentResponseDto::of)
                 .collect(Collectors.toList());
     }
 

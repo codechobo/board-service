@@ -24,6 +24,7 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
     @Override
     public Page<ResponsePostListDto> getMembersIncludingLastCreate(String author, String title, String content, Pageable pageable) {
         List<ResponsePostListDto> result = jpaQueryFactory.select(new QResponsePostListDto(
+                        post.createdAt,
                         post.author,
                         post.title,
                         post.content,
@@ -45,6 +46,7 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
     @Override
     public Page<ResponsePostListDto> getPostViewCountSort(String author, String title, String content, Pageable pageable) {
         List<ResponsePostListDto> result = jpaQueryFactory.select(new QResponsePostListDto(
+                        post.createdAt,
                         post.author,
                         post.title,
                         post.content,
@@ -70,7 +72,7 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
         return post.title.contains(title);
     }
 
-    private  BooleanExpression isContainsContent(String content) {
+    private BooleanExpression isContainsContent(String content) {
         if (Strings.isEmpty(content)) {
             return null;
         }

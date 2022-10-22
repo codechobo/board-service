@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/api/v1")
 @RequiredArgsConstructor
 public class LikeController {
 
@@ -21,7 +20,7 @@ public class LikeController {
 
     @PostMapping("/posts/likes")
     public ResponseEntity<PostsLikeResponseDto> createPostLike(
-            @Valid @RequestBody PostLikeRequestDto postLikeRequestDto) {
+            @Valid @RequestBody(required = false) PostLikeRequestDto postLikeRequestDto) {
         PostsLikeResponseDto postsLikeResponseDto = likeService.savePostLike(postLikeRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(postsLikeResponseDto);
     }
