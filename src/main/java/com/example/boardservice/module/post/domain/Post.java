@@ -53,10 +53,7 @@ public class Post extends TimeEntity {
     @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();
 
-    @ManyToMany
-    @JoinTable(name = "POSTS_HASH_TAGS",
-            joinColumns = @JoinColumn(name = "POST_POSTS_ID"),
-            inverseJoinColumns = @JoinColumn(name = "HASH_TAGS_HASH_TAGS_ID"))
+    @OneToMany
     private Set<HashTag> hashTags = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

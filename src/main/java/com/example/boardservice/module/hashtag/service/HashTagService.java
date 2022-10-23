@@ -1,15 +1,14 @@
 package com.example.boardservice.module.hashtag.service;
 
-import com.example.boardservice.error.ErrorCode;
 import com.example.boardservice.module.hashtag.domain.HashTag;
 import com.example.boardservice.module.hashtag.domain.repository.HashTagRepository;
 import com.example.boardservice.module.hashtag.web.dto.ResponseHashTagListDto;
 import com.example.boardservice.module.hashtag.web.dto.ResponseHashTagSaveDto;
 import lombok.RequiredArgsConstructor;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,24 +17,19 @@ import java.util.stream.Collectors;
 public class HashTagService {
 
     private final HashTagRepository repository;
-    private StringBuilder hashTagPrefix = new StringBuilder();
 
     @Transactional
-    public ResponseHashTagSaveDto saveHashTag(String hashTagName) {
-        String fullHashTagName = hashTagPrefix.append("#").append(hashTagName).toString();
+    public ResponseHashTagSaveDto saveHashTag(List<String> hashTagName) {
+        List<HashTag> fullHashTags = toFullHashTagMapper(hashTagName);
+        List<HashTag> savedFullHashTags = repository.saveAll(fullHashTags);
+        return ResponseHashTagSaveDto.of(savedFullHashTags);
+    }
 
-        HashTag hashTag = HashTag.builder().hashTagName(fullHashTagName).build();
-        if (repository.existsByHashTagName(fullHashTagName)) {
-            // 존재 한다면
-            HashTag savedHashTag = repository.findByHashTagName(fullHashTagName)
-                    .orElseThrow(() -> new EntityNotFoundException(ErrorCode.NOT_FOUND_ENTITY.getMessage()));
-            return ResponseHashTagSaveDto.of(savedHashTag);
-
-        } else {
-            // 존재 하지 않는다면
-            HashTag savedHashTag = repository.save(hashTag);
-            return ResponseHashTagSaveDto.of(savedHashTag);
-        }
+    private List<HashTag> toFullHashTagMapper(List<String> hashTagName) {
+        return hashTagName.stream()
+                .map(hashTagNameData -> Strings.concat("#", hashTagNameData))
+                .map(fullHashTagNameData -> HashTag.builder().hashTagName(fullHashTagNameData).build())
+                .collect(Collectors.toList());
     }
 
     public ResponseHashTagListDto findHashTagNameList() {

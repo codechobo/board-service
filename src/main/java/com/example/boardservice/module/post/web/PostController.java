@@ -26,7 +26,7 @@ public class PostController {
     @PostMapping("/posts")
     public ResponseEntity<ResponsePostSaveDto> createPost(@Valid @RequestBody(required = false) RequestPostSaveDto requestDto) {
         // 해쉬태그 저장
-        hashTagService.saveHashTag(requestDto.getHashTagName());
+        hashTagService.saveHashTag(requestDto.getHashTagNames());
 
         ResponsePostSaveDto responseDto = postService.savePost(requestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);

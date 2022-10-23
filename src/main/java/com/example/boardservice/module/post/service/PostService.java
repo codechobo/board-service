@@ -15,12 +15,14 @@ import com.example.boardservice.module.post.web.dto.response.ResponsePostListDto
 import com.example.boardservice.module.post.web.dto.response.ResponsePostPagingDto;
 import com.example.boardservice.module.post.web.dto.response.ResponsePostSaveDto;
 import lombok.RequiredArgsConstructor;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -46,8 +48,14 @@ public class PostService {
         return ResponsePostSaveDto.of(savePost);
     }
 
+    // 메서드 로직 고려할 것
     private void addHashTag(RequestPostSaveDto requestDto, Post post) {
-        hashTagRepository.findByHashTagName(requestDto.getHashTagName()).ifPresent(hashTag -> post.getHashTags().add(hashTag));
+        List<String> hashTagNames = requestDto.getHashTagNames();
+
+        requestDto.getHashTagNames().forEach(
+                hashTagNameData -> hashTagRepository.findByHashTagName(Strings.concat("#", hashTagNameData))
+                        .ifPresent(hashTag -> post.getHashTags().add(hashTag))
+        );
     }
 
     private void addCategory(RequestPostSaveDto requestDto, Post post) {
