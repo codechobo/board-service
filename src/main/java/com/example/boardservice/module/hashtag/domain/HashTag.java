@@ -9,6 +9,7 @@ import javax.persistence.*;
 
 @Getter
 @Entity
+@Table(name = "HASHTAGS")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class HashTag {
 
@@ -16,7 +17,7 @@ public class HashTag {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "HASH_TAG_NAME", unique = true)
+    @Column(name = "HASH_TAG_NAMES", unique = true)
     private String hashTagName;
 
     @Builder
