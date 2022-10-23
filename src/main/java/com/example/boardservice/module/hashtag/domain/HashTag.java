@@ -1,23 +1,22 @@
 package com.example.boardservice.module.hashtag.domain;
 
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Getter
 @Entity
-@Table(name = "HASHTAGS")
+@Table(name = "HASH_TAGS")
+@EqualsAndHashCode(of = "id")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class HashTag {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "HASH_TAGS_ID")
     private Long id;
 
-    @Column(name = "HASH_TAG_NAMES", unique = true)
+    @Column(nullable = false)
     private String hashTagName;
 
     @Builder

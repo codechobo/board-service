@@ -2,6 +2,7 @@ package com.example.boardservice.module.post.service;
 
 import com.example.boardservice.error.ErrorCode;
 import com.example.boardservice.module.category.repository.CategoryRepository;
+import com.example.boardservice.module.hashtag.domain.repository.HashTagRepository;
 import com.example.boardservice.module.like.domain.repository.LikeRepository;
 import com.example.boardservice.module.member.domain.Member;
 import com.example.boardservice.module.member.domain.repository.MemberRepository;
@@ -30,16 +31,23 @@ public class PostService {
     private final MemberRepository memberRepository;
     private final CategoryRepository categoryRepository;
     private final LikeRepository likeRepository;
+    private final HashTagRepository hashTagRepository;
 
     @Transactional
     public ResponsePostSaveDto savePost(RequestPostSaveDto requestDto) {
         Member member = getMemberEntity(requestDto.getAuthor());
-
         Post post = createPost(member.getNickname(), requestDto.getTitle(), requestDto.getContent());
-        post.publish();
-        addCategory(requestDto, post);
+
+        post.publish(); // 게시글 공개
+        addCategory(requestDto, post); // 카테고리 추가
+
+        addHashTag(requestDto, post); // 해쉬태그 추가
         Post savePost = postRepository.save(post);
         return ResponsePostSaveDto.of(savePost);
+    }
+
+    private void addHashTag(RequestPostSaveDto requestDto, Post post) {
+        hashTagRepository.findByHashTagName(requestDto.getHashTagName()).ifPresent(hashTag -> post.getHashTags().add(hashTag));
     }
 
     private void addCategory(RequestPostSaveDto requestDto, Post post) {

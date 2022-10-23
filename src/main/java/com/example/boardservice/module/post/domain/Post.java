@@ -4,12 +4,15 @@ import com.example.boardservice.error.ErrorCode;
 import com.example.boardservice.module.base.TimeEntity;
 import com.example.boardservice.module.category.domain.Category;
 import com.example.boardservice.module.comment.domain.Comment;
+import com.example.boardservice.module.hashtag.domain.HashTag;
 import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @NamedEntityGraph(name = "post-entity-graph",
         attributeNodes = {
@@ -47,14 +50,20 @@ public class Post extends TimeEntity {
     @Column(name = "VIEW_COUNT")
     private int viewCount; // 게시글 조회수
 
-    @OneToMany(mappedBy = "post",fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();
+
+    @ManyToMany
+    @JoinTable(name = "POSTS_HASH_TAGS",
+            joinColumns = @JoinColumn(name = "POST_POSTS_ID"),
+            inverseJoinColumns = @JoinColumn(name = "HASH_TAGS_HASH_TAGS_ID"))
+    private Set<HashTag> hashTags = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Category category;
 
     @Column(name = "LIKES")
-    private long likes;
+    private long likes; // 좋아요 수
 
     @Builder
     public Post(String author, String title, String content, boolean published) {

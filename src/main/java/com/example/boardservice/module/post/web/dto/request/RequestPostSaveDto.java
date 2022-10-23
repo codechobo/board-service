@@ -22,6 +22,10 @@ public class RequestPostSaveDto {
     @JsonProperty("category_id")
     private Long categoryId; // 카테고리 아이디
 
+    @NotNull
+    @Size(max = 20)
+    private String hashTagName;
+
     @NotEmpty
     @Size(max = 30)
     private String author; // 글쓴이

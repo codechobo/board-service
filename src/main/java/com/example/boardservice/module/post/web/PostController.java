@@ -1,5 +1,6 @@
 package com.example.boardservice.module.post.web;
 
+import com.example.boardservice.module.hashtag.service.HashTagService;
 import com.example.boardservice.module.post.service.PostService;
 import com.example.boardservice.module.post.web.dto.request.RequestPostSaveDto;
 import com.example.boardservice.module.post.web.dto.request.RequestPostUpdateDto;
@@ -20,9 +21,13 @@ import javax.validation.Valid;
 public class PostController {
 
     private final PostService postService;
+    private final HashTagService hashTagService;
 
     @PostMapping("/posts")
     public ResponseEntity<ResponsePostSaveDto> createPost(@Valid @RequestBody(required = false) RequestPostSaveDto requestDto) {
+        // 해쉬태그 저장
+        hashTagService.saveHashTag(requestDto.getHashTagName());
+
         ResponsePostSaveDto responseDto = postService.savePost(requestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }

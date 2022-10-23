@@ -21,20 +21,18 @@ public class HashTagService {
 
     @Transactional
     public ResponseHashTagSaveDto saveHashTag(String hashTagName) {
-        isExists(hashTagName);
         HashTag hashTag = HashTag.builder().hashTagName(hashTagName).build();
-        HashTag savedHashTag = repository.save(hashTag);
-        return ResponseHashTagSaveDto.of(savedHashTag);
-    }
+        if (repository.existsByHashTagName(hashTagName)) {
+            // 존재 한다면
+            HashTag savedHashTag = repository.findByHashTagName(hashTagName)
+                    .orElseThrow(() -> new EntityNotFoundException(ErrorCode.NOT_FOUND_ENTITY.getMessage()));
+            return ResponseHashTagSaveDto.of(savedHashTag);
 
-    private void isExists(String hashTagName) {
-        if (isExistsByHashTagName(hashTagName)) {
-            throw new EntityNotFoundException(ErrorCode.REQUEST_DATA_DUPLICATED.getMessage());
+        } else {
+            // 존재 하지 않는다면
+            HashTag savedHashTag = repository.save(hashTag);
+            return ResponseHashTagSaveDto.of(savedHashTag);
         }
-    }
-
-    private boolean isExistsByHashTagName(String hashTagName) {
-        return repository.existsByHashTagName(hashTagName);
     }
 
     public ResponseHashTagListDto findHashTagNameList() {
