@@ -18,13 +18,16 @@ import java.util.stream.Collectors;
 public class HashTagService {
 
     private final HashTagRepository repository;
+    private StringBuilder hashTagPrefix = new StringBuilder();
 
     @Transactional
     public ResponseHashTagSaveDto saveHashTag(String hashTagName) {
-        HashTag hashTag = HashTag.builder().hashTagName(hashTagName).build();
-        if (repository.existsByHashTagName(hashTagName)) {
+        String fullHashTagName = hashTagPrefix.append("#").append(hashTagName).toString();
+
+        HashTag hashTag = HashTag.builder().hashTagName(fullHashTagName).build();
+        if (repository.existsByHashTagName(fullHashTagName)) {
             // 존재 한다면
-            HashTag savedHashTag = repository.findByHashTagName(hashTagName)
+            HashTag savedHashTag = repository.findByHashTagName(fullHashTagName)
                     .orElseThrow(() -> new EntityNotFoundException(ErrorCode.NOT_FOUND_ENTITY.getMessage()));
             return ResponseHashTagSaveDto.of(savedHashTag);
 
