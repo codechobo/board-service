@@ -22,7 +22,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -50,8 +49,6 @@ public class PostService {
 
     // 메서드 로직 고려할 것
     private void addHashTag(RequestPostSaveDto requestDto, Post post) {
-        List<String> hashTagNames = requestDto.getHashTagNames();
-
         requestDto.getHashTagNames().forEach(
                 hashTagNameData -> hashTagRepository.findByHashTagName(Strings.concat("#", hashTagNameData))
                         .ifPresent(hashTag -> post.getHashTags().add(hashTag))
