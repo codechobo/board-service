@@ -43,8 +43,8 @@ public class PostService {
         post.publish(); // 게시글 공개
         addCategory(requestDto, post); // 카테고리 추가
 
-        addHashTag(requestDto, post); // 해쉬태그 추가
         Post savePost = postRepository.save(post);
+        addHashTag(requestDto, savePost); // 해쉬태그 추가
         return ResponsePostSaveDto.of(savePost);
     }
 

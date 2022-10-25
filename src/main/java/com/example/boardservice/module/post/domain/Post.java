@@ -54,6 +54,7 @@ public class Post extends TimeEntity {
     private List<Comment> comments = new ArrayList<>();
 
     @OneToMany
+    @JoinColumn(name = "POSTS_ID")
     private Set<HashTag> hashTags = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

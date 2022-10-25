@@ -25,8 +25,8 @@ public class HashTagService {
         return ResponseHashTagSaveDto.of(savedFullHashTags);
     }
 
-    private List<HashTag> toFullHashTagMapper(List<String> hashTagName) {
-        return hashTagName.stream()
+    private List<HashTag> toFullHashTagMapper(List<String> hashTagNames) {
+        return hashTagNames.stream()
                 .map(hashTagNameData -> Strings.concat("#", hashTagNameData))
                 .map(fullHashTagNameData -> HashTag.builder().hashTagName(fullHashTagNameData).build())
                 .collect(Collectors.toList());
