@@ -1,7 +1,9 @@
 package com.example.boardservice.module.post.web;
 
 import com.example.boardservice.module.hashtag.service.HashTagService;
+import com.example.boardservice.module.hashtag.web.dto.ResponseHashTagSaveDto;
 import com.example.boardservice.module.post.service.PostService;
+import com.example.boardservice.module.post.web.dto.ResponsePostWithHashTagSaveDto;
 import com.example.boardservice.module.post.web.dto.request.RequestPostSaveDto;
 import com.example.boardservice.module.post.web.dto.request.RequestPostUpdateDto;
 import com.example.boardservice.module.post.web.dto.request.RequestSearchPostDto;
@@ -24,12 +26,13 @@ public class PostController {
     private final HashTagService hashTagService;
 
     @PostMapping("/posts")
-    public ResponseEntity<ResponsePostSaveDto> createPost(@Valid @RequestBody(required = false) RequestPostSaveDto requestDto) {
+    public ResponseEntity<ResponsePostWithHashTagSaveDto> createPost(@Valid @RequestBody(required = false) RequestPostSaveDto requestDto) {
         // 해쉬태그 저장
-        hashTagService.saveHashTag(requestDto.getHashTagNames());
-
+        ResponseHashTagSaveDto responseHashTagSaveDto = hashTagService.saveHashTag(requestDto.getHashTagNames());
+        // 게시글 저장
         ResponsePostSaveDto responseDto = postService.savePost(requestDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
+        ResponsePostWithHashTagSaveDto dto = ResponsePostWithHashTagSaveDto.of(responseHashTagSaveDto, responseDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(dto);
     }
 
     @PutMapping("/posts/{id}/close")

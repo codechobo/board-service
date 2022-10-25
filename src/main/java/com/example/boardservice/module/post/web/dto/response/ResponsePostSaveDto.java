@@ -20,6 +20,7 @@ public class ResponsePostSaveDto {
 
     private final long likes; // 좋아요 수
 
+
     @Builder
     public ResponsePostSaveDto(LocalDateTime writeDateTime, String author, String title, String content, int viewCount, long likes) {
         this.writeDateTime = writeDateTime;
