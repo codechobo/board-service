@@ -48,7 +48,7 @@ public class PostService {
         return ResponsePostSaveDto.of(savePost);
     }
 
-    // 메서드 로직 고려할 것
+    // TODO 중복되는 HashTag 는 어떻게 처리할지 고려할 것
     private void addHashTag(RequestPostSaveDto requestDto, Post post) {
         List<String> hashTagNames = requestDto.getHashTagNames();
 
