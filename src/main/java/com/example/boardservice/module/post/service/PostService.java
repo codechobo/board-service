@@ -2,7 +2,9 @@ package com.example.boardservice.module.post.service;
 
 import com.example.boardservice.error.ErrorCode;
 import com.example.boardservice.module.category.repository.CategoryRepository;
+import com.example.boardservice.module.hashtag.domain.HashTag;
 import com.example.boardservice.module.hashtag.domain.repository.HashTagRepository;
+import com.example.boardservice.module.hashtag.web.dto.ResponseHashTagListDto;
 import com.example.boardservice.module.like.domain.repository.LikeRepository;
 import com.example.boardservice.module.member.domain.Member;
 import com.example.boardservice.module.member.domain.repository.MemberRepository;
@@ -22,6 +24,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -130,5 +134,12 @@ public class PostService {
     public void close(Long postId) {
         Post post = getPostEntity(postId);
         post.close();
+    }
+
+    @Transactional
+    public ResponseHashTagListDto findHashTags(Long postsId) {
+        Post post = getPostEntity(postsId);
+        List<HashTag> hashTagList = new ArrayList<>(post.getHashTags());
+        return ResponseHashTagListDto.builder().hashTagNames(hashTagList).build();
     }
 }

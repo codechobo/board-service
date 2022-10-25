@@ -1,6 +1,7 @@
 package com.example.boardservice.module.post.web;
 
 import com.example.boardservice.module.hashtag.service.HashTagService;
+import com.example.boardservice.module.hashtag.web.dto.ResponseHashTagListDto;
 import com.example.boardservice.module.hashtag.web.dto.ResponseHashTagSaveDto;
 import com.example.boardservice.module.post.service.PostService;
 import com.example.boardservice.module.post.web.dto.ResponsePostWithHashTagSaveDto;
@@ -24,6 +25,12 @@ public class PostController {
 
     private final PostService postService;
     private final HashTagService hashTagService;
+
+    @GetMapping("/posts/{id}/hash-tags")
+    public ResponseEntity<ResponseHashTagListDto> getHashTags(@PathVariable("id") Long postsId) {
+        ResponseHashTagListDto responseHashTagListDto = postService.findHashTags(postsId);
+        return ResponseEntity.status(HttpStatus.OK).body(responseHashTagListDto);
+    }
 
     @PostMapping("/posts")
     public ResponseEntity<ResponsePostWithHashTagSaveDto> createPost(@Valid @RequestBody(required = false) RequestPostSaveDto requestDto) {
