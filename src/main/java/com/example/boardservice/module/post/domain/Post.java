@@ -14,9 +14,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@NamedEntityGraph(name = "post-entity-graph",
+@NamedEntityGraph(name = "postWithCategory",
         attributeNodes = {
-                @NamedAttributeNode("category")
+                @NamedAttributeNode("category"),
+        })
+@NamedEntityGraph(name = "postWithHashTag",
+        attributeNodes = {
+                @NamedAttributeNode("hashTags"),
         })
 @Getter
 @Entity
@@ -53,8 +57,7 @@ public class Post extends TimeEntity {
     @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();
 
-    @OneToMany
-    @JoinColumn(name = "POSTS_ID")
+    @ManyToMany(cascade = CascadeType.ALL)
     private Set<HashTag> hashTags = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

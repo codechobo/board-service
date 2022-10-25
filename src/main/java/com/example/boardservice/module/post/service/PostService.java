@@ -2,9 +2,8 @@ package com.example.boardservice.module.post.service;
 
 import com.example.boardservice.error.ErrorCode;
 import com.example.boardservice.module.category.repository.CategoryRepository;
-import com.example.boardservice.module.hashtag.domain.HashTag;
 import com.example.boardservice.module.hashtag.domain.repository.HashTagRepository;
-import com.example.boardservice.module.hashtag.web.dto.ResponseHashTagListDto;
+import com.example.boardservice.module.hashtag.web.dto.response.ResponseHashTagListDto;
 import com.example.boardservice.module.like.domain.repository.LikeRepository;
 import com.example.boardservice.module.member.domain.Member;
 import com.example.boardservice.module.member.domain.repository.MemberRepository;
@@ -24,8 +23,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -46,17 +43,15 @@ public class PostService {
         post.publish(); // 게시글 공개
         addCategory(requestDto, post); // 카테고리 추가
 
+        addHashTag(requestDto, post); // 해쉬태그 추가
         Post savePost = postRepository.save(post);
-        addHashTag(requestDto, savePost); // 해쉬태그 추가
         return ResponsePostSaveDto.of(savePost);
     }
 
-    // 메서드 로직 고려할 것
     private void addHashTag(RequestPostSaveDto requestDto, Post post) {
-        requestDto.getHashTagNames().forEach(
-                hashTagNameData -> hashTagRepository.findByHashTagName(Strings.concat("#", hashTagNameData))
-                        .ifPresent(hashTag -> post.getHashTags().add(hashTag))
-        );
+        requestDto.getHashTagNames().forEach(hashTagNameData ->
+                hashTagRepository.findByHashTagName(Strings.concat("#", hashTagNameData))
+                        .ifPresent(hashTag -> post.getHashTags().add(hashTag)));
     }
 
     private void addCategory(RequestPostSaveDto requestDto, Post post) {
@@ -138,8 +133,8 @@ public class PostService {
 
     @Transactional
     public ResponseHashTagListDto findHashTags(Long postsId) {
-        Post post = getPostEntity(postsId);
-        List<HashTag> hashTagList = new ArrayList<>(post.getHashTags());
-        return ResponseHashTagListDto.builder().hashTagNames(hashTagList).build();
+        Post post = postRepository.findPostsWithHashTagsById(postsId)
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.NOT_FOUND_ENTITY.getMessage()));
+        return ResponseHashTagListDto.builder().hashTagNames(post.getHashTags()).build();
     }
 }

@@ -1,6 +1,6 @@
 package com.example.boardservice.module.post.web.dto;
 
-import com.example.boardservice.module.hashtag.web.dto.ResponseHashTagSaveDto;
+import com.example.boardservice.module.hashtag.web.dto.response.ResponseHashTagSaveDto;
 import com.example.boardservice.module.post.web.dto.response.ResponsePostSaveDto;
 import lombok.Builder;
 import lombok.Getter;

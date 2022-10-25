@@ -1,8 +1,8 @@
 package com.example.boardservice.module.post.web;
 
 import com.example.boardservice.module.hashtag.service.HashTagService;
-import com.example.boardservice.module.hashtag.web.dto.ResponseHashTagListDto;
-import com.example.boardservice.module.hashtag.web.dto.ResponseHashTagSaveDto;
+import com.example.boardservice.module.hashtag.web.dto.response.ResponseHashTagListDto;
+import com.example.boardservice.module.hashtag.web.dto.response.ResponseHashTagSaveDto;
 import com.example.boardservice.module.post.service.PostService;
 import com.example.boardservice.module.post.web.dto.ResponsePostWithHashTagSaveDto;
 import com.example.boardservice.module.post.web.dto.request.RequestPostSaveDto;

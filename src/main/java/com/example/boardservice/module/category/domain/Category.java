@@ -12,10 +12,10 @@ import java.util.List;
         name = "category-entity-graph-with-post",
         attributeNodes = {
                 @NamedAttributeNode("parent"),
-                @NamedAttributeNode(value = "posts", subgraph = "post-entity-graph")}
+                @NamedAttributeNode(value = "posts", subgraph = "postWithCategory")}
         , subgraphs = {
                 @NamedSubgraph(
-                        name = "post-entity-graph",
+                        name = "postWithCategory",
                         attributeNodes = {
                                 @NamedAttributeNode("category")})})
 @Entity

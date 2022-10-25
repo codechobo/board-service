@@ -2,7 +2,7 @@ package com.example.boardservice.module.hashtag.service;
 
 import com.example.boardservice.module.hashtag.domain.HashTag;
 import com.example.boardservice.module.hashtag.domain.repository.HashTagRepository;
-import com.example.boardservice.module.hashtag.web.dto.ResponseHashTagSaveDto;
+import com.example.boardservice.module.hashtag.web.dto.response.ResponseHashTagSaveDto;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Service;
